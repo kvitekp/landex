@@ -102,7 +102,7 @@ void LandExWindow::GetDefaultWindowPos(Rect& rc) {
   rc.top = rc.bottom + kDefWindowSize.height;
 }
 
-void LandExWindow::OnDraw() {
+void LandExWindow::OnDrawWindow() {
 #if 1
   ::XPLMSetGraphicsState(
       0 /* no fog */,

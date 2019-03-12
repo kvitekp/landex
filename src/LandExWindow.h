@@ -45,7 +45,7 @@ public:
 
 private:
   // XPLMWindow interface.
-  void OnDraw() override;
+  void OnDrawWindow() override;
 
   void GetDefaultWindowPos(Rect& rc);
 
