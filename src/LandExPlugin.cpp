@@ -25,6 +25,8 @@
 
 namespace xplmpp {
 
+#define ACTIVATE_PLUGIN_ERROR_CALLBACK 1
+
 namespace {
 
 float RoundOff(float value, float factor = 10.0f) {
@@ -73,6 +75,10 @@ LandExPlugin::~LandExPlugin() {
 
 bool LandExPlugin::OnStart(char* name, char* signature, char* description) {
   LOG(INFO, "LandExPlugin::OnStart: ");
+
+#if ACTIVATE_PLUGIN_ERROR_CALLBACK
+  error_callback_ = std::make_unique<XPLMErrorCallback>(this);
+#endif
 
   strcpy_s(name, kMaxOnStartStringLength, name_.c_str());
   strcpy_s(signature, kMaxOnStartStringLength, signature_.c_str());
@@ -148,6 +154,10 @@ void LandExPlugin::OnAirplaneLanded(const LandingInfo& info) {
       << "    " << LandingQuality(fabs(info.vertical_speed))
       ;
   window_.AddLine(sst.str());
+}
+
+void LandExPlugin::OnPluginError(const char* error) {
+  LOG(ERROR, error);
 }
 
 bool LandExPlugin::Init() {

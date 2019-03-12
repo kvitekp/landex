@@ -36,6 +36,7 @@
     <ClInclude Include="..\xplmpp\Size.h" />
     <ClInclude Include="..\xplmpp\XPLMCommand.h" />
     <ClInclude Include="..\xplmpp\XPLMData.h" />
+    <ClInclude Include="..\xplmpp\XPLMErrorCallback.h" />
     <ClInclude Include="..\xplmpp\XPLMLog.h" />
     <ClInclude Include="..\xplmpp\XPLMMenu.h" />
     <ClInclude Include="..\xplmpp\XPLMMonitor.h" />
@@ -54,6 +55,7 @@
   <ItemGroup>
     <ClCompile Include="..\xplmpp\XPLMCommand.cpp" />
     <ClCompile Include="..\xplmpp\XPLMData.cpp" />
+    <ClCompile Include="..\xplmpp\XPLMErrorCallback.cpp" />
     <ClCompile Include="..\xplmpp\XPLMLog.cpp" />
     <ClCompile Include="..\xplmpp\XPLMMenu.cpp" />
     <ClCompile Include="..\xplmpp\XPLMMonitor.cpp" />

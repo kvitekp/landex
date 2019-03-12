@@ -22,6 +22,7 @@
 
 #include "xplmpp/XPLMPlugin.h"
 #include "xplmpp/XPLMPluginFactory.h"
+#include "xplmpp/XPLMErrorCallback.h"
 #include "xplmpp/XPLMCommand.h"
 #include "xplmpp/XPLMData.h"
 
@@ -35,7 +36,8 @@ namespace xplmpp {
 // Represents the plugin
 class LandExPlugin : public XPLMPlugin,
                      public CmdHandler,
-                     public FlightLoopClient {
+                     public FlightLoopClient,
+                     public XPLMErrorCallback::Handler {
 public:
   LandExPlugin();
   ~LandExPlugin() override;
@@ -55,6 +57,9 @@ private:
   void OnAirplaneFlying(const FlyingInfo& info) override;
   void OnAirplaneLanded(const LandingInfo& info) override;
 
+  // XPLMErrorCallback::Handler
+  void OnPluginError(const char* error) override;
+
   bool Init();
   void Quit();
 
@@ -70,6 +75,8 @@ private:
   std::unique_ptr<FlightLoop> flight_loop_;
 
   XPLMData vr_enabled_;
+
+  std::unique_ptr<XPLMErrorCallback> error_callback_;
 };
 
 // Implements the plugin factory
