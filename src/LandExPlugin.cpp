@@ -63,7 +63,7 @@ std::string LandingQuality(float vy) {
 LandExPlugin::LandExPlugin()
 : name_("LandEx")
 , signature_("com.kvitek.x-plane.landex")
-, description_("A plugin that displays landing quality statistics.")
+, description_("A plugin that displays landing statistics.")
 , menu_(this) {
   g_log.set_prefix("LandEx: ");
 }
