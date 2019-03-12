@@ -1,0 +1,180 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="xplmpp">
+      <UniqueIdentifier>{286fc3c1-d853-44d4-abba-752ef2661d6c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{ec07b1b3-268f-4de6-a706-97ed0a655ff4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SDK">
+      <UniqueIdentifier>{b2959f95-09ed-4ef5-a8d2-9aa0d2b37c77}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SDK\XPLM">
+      <UniqueIdentifier>{d77c66b8-c039-43c9-8683-99dd47245c01}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SDK\Widgets">
+      <UniqueIdentifier>{059628d2-40c5-44b1-a170-0097aa499531}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\xplmpp\Base.h">
+      <Filter>xplmpp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\xplmpp\Point.h">
+      <Filter>xplmpp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\xplmpp\Rect.h">
+      <Filter>xplmpp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\xplmpp\Size.h">
+      <Filter>xplmpp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\xplmpp\XPLMLog.h">
+      <Filter>xplmpp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\xplmpp\XPLMMonitor.h">
+      <Filter>xplmpp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\xplmpp\XPLMMouse.h">
+      <Filter>xplmpp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\xplmpp\XPLMPlugin.h">
+      <Filter>xplmpp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\xplmpp\XPLMPluginFactory.h">
+      <Filter>xplmpp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\xplmpp\XPLMScreen.h">
+      <Filter>xplmpp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\xplmpp\XPLMWindow.h">
+      <Filter>xplmpp</Filter>
+    </ClInclude>
+    <ClInclude Include="src\LandExPlugin.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\LandExWindow.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\SDK\CHeaders\XPLM\XPLMCamera.h">
+      <Filter>SDK\XPLM</Filter>
+    </ClInclude>
+    <ClInclude Include="..\SDK\CHeaders\XPLM\XPLMDataAccess.h">
+      <Filter>SDK\XPLM</Filter>
+    </ClInclude>
+    <ClInclude Include="..\SDK\CHeaders\XPLM\XPLMDefs.h">
+      <Filter>SDK\XPLM</Filter>
+    </ClInclude>
+    <ClInclude Include="..\SDK\CHeaders\XPLM\XPLMDisplay.h">
+      <Filter>SDK\XPLM</Filter>
+    </ClInclude>
+    <ClInclude Include="..\SDK\CHeaders\XPLM\XPLMGraphics.h">
+      <Filter>SDK\XPLM</Filter>
+    </ClInclude>
+    <ClInclude Include="..\SDK\CHeaders\XPLM\XPLMInstance.h">
+      <Filter>SDK\XPLM</Filter>
+    </ClInclude>
+    <ClInclude Include="..\SDK\CHeaders\XPLM\XPLMMap.h">
+      <Filter>SDK\XPLM</Filter>
+    </ClInclude>
+    <ClInclude Include="..\SDK\CHeaders\XPLM\XPLMMenus.h">
+      <Filter>SDK\XPLM</Filter>
+    </ClInclude>
+    <ClInclude Include="..\SDK\CHeaders\XPLM\XPLMNavigation.h">
+      <Filter>SDK\XPLM</Filter>
+    </ClInclude>
+    <ClInclude Include="..\SDK\CHeaders\XPLM\XPLMPlanes.h">
+      <Filter>SDK\XPLM</Filter>
+    </ClInclude>
+    <ClInclude Include="..\SDK\CHeaders\XPLM\XPLMPlugin.h">
+      <Filter>SDK\XPLM</Filter>
+    </ClInclude>
+    <ClInclude Include="..\SDK\CHeaders\XPLM\XPLMProcessing.h">
+      <Filter>SDK\XPLM</Filter>
+    </ClInclude>
+    <ClInclude Include="..\SDK\CHeaders\XPLM\XPLMScenery.h">
+      <Filter>SDK\XPLM</Filter>
+    </ClInclude>
+    <ClInclude Include="..\SDK\CHeaders\XPLM\XPLMUtilities.h">
+      <Filter>SDK\XPLM</Filter>
+    </ClInclude>
+    <ClInclude Include="..\SDK\CHeaders\Widgets\XPStandardWidgets.h">
+      <Filter>SDK\Widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\SDK\CHeaders\Widgets\XPUIGraphics.h">
+      <Filter>SDK\Widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\SDK\CHeaders\Widgets\XPWidgetDefs.h">
+      <Filter>SDK\Widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\SDK\CHeaders\Widgets\XPWidgets.h">
+      <Filter>SDK\Widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\SDK\CHeaders\Widgets\XPWidgetUtils.h">
+      <Filter>SDK\Widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\xplmpp\XPLMMenu.h">
+      <Filter>xplmpp</Filter>
+    </ClInclude>
+    <ClInclude Include="src\LandExMenu.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\xplmpp\XPLMCommand.h">
+      <Filter>xplmpp</Filter>
+    </ClInclude>
+    <ClInclude Include="src\LandExCmdHandler.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\xplmpp\XPLMData.h">
+      <Filter>xplmpp</Filter>
+    </ClInclude>
+    <ClInclude Include="src\FlightLoop.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\FlightLoopClient.h">
+      <Filter>src</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\xplmpp\XPLMLog.cpp">
+      <Filter>xplmpp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\xplmpp\XPLMMonitor.cpp">
+      <Filter>xplmpp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\xplmpp\XPLMMouse.cpp">
+      <Filter>xplmpp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\xplmpp\XPLMPlugin.cpp">
+      <Filter>xplmpp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\xplmpp\XPLMScreen.cpp">
+      <Filter>xplmpp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\xplmpp\XPLMWindow.cpp">
+      <Filter>xplmpp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\LandExPlugin.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\LandExWindow.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\xplmpp\XPLMMenu.cpp">
+      <Filter>xplmpp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\LandExMenu.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\xplmpp\XPLMCommand.cpp">
+      <Filter>xplmpp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\xplmpp\XPLMData.cpp">
+      <Filter>xplmpp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\FlightLoop.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
