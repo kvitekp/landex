@@ -27,6 +27,11 @@ namespace xplmpp {
 
 #define ACTIVATE_PLUGIN_ERROR_CALLBACK 1
 
+// Force abseil libraries
+#pragma comment(lib, "absl_base")
+#pragma comment(lib, "absl_strings")
+#pragma comment(lib, "absl_internal_throw_delegate")
+
 namespace {
 
 float RoundOff(float value, float factor = 10.0f) {
@@ -108,7 +113,7 @@ void LandExPlugin::OnStop() {
 }
 
 void LandExPlugin::OnReceiveMessage(XPLMPluginID from, int msg, void* param) {
-  LOG(INFO, "LandExPlugin::OnReceiveMessage: ");
+  LOG(INFO, absl::StrCat("LandExPlugin::OnReceiveMessage: from=", from, " msg=", msg));
 
   if (from == XPLM_PLUGIN_XPLANE) {
     switch (msg) {
@@ -123,7 +128,7 @@ void LandExPlugin::OnReceiveMessage(XPLMPluginID from, int msg, void* param) {
 }
 
 void LandExPlugin::OnCommand(Cmd cmd) {
-  LOG(INFO, "LandExPlugin::OnCommand: ");
+  LOG(INFO, absl::StrCat("LandExPlugin::OnCommand: cmd=", (int)cmd));
 
   switch (cmd) {
     case Cmd::showWindow:

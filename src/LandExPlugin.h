@@ -20,6 +20,8 @@
 #ifndef LANDEX_PLUGIN_H
 #define LANDEX_PLUGIN_H
 
+#include "Common.h"
+
 #include "xplmpp/XPLMPlugin.h"
 #include "xplmpp/XPLMPluginFactory.h"
 #include "xplmpp/XPLMErrorCallback.h"
@@ -73,10 +75,9 @@ private:
   LandExMenu menu_;
 
   std::unique_ptr<FlightLoop> flight_loop_;
+  std::unique_ptr<XPLMErrorCallback> error_callback_;
 
   XPLMData vr_enabled_;
-
-  std::unique_ptr<XPLMErrorCallback> error_callback_;
 };
 
 // Implements the plugin factory

@@ -138,6 +138,9 @@
     <ClInclude Include="..\xplmpp\XPLMErrorCallback.h">
       <Filter>xplmpp</Filter>
     </ClInclude>
+    <ClInclude Include="src\Common.h">
+      <Filter>src</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\xplmpp\XPLMLog.cpp">

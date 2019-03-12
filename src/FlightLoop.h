@@ -20,6 +20,8 @@
 #ifndef LANDEX_FLIGHTLOOP_H
 #define LANDEX_FLIGHTLOOP_H
 
+#include "Common.h"
+
 #define WRITE_TRACE_FILE 0
 
 #if WRITE_TRACE_FILE

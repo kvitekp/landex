@@ -20,6 +20,8 @@
 #ifndef LANDEX_MENU_H
 #define LANDEX_MENU_H
 
+#include "Common.h"
+
 #include "xplmpp/XPLMMenu.h"
 #include "xplmpp/XPLMCommand.h"
 

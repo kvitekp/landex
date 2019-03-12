@@ -20,6 +20,7 @@
 #include "LandExMenu.h"
 
 #include "xplmpp/XPLMScreen.h"
+#include "xplmpp/XPLMLog.h"
 #include "xplmpp/Rect.h"
 
 namespace xplmpp {
@@ -44,7 +45,7 @@ bool LandExMenu::Create() {
       cmd_show_window_.Create("LandEx/show_window", "Show Window"));
 
   AppendMenuItemWithCommand("Clear Window",
-      cmd_show_window_.Create("LandEx/clear_window", "Clear Window"));
+      cmd_clear_window_.Create("LandEx/clear_window", "Clear Window"));
 
   return true;
 }
@@ -56,6 +57,9 @@ void LandExMenu::Destroy() {
 bool LandExMenu::OnCommand(XPLMCommandRef cmd_ref, XPLMCommandPhase phase) {
   assert(cmd_handler_);
 
+  if (phase != xplm_CommandBegin)
+    return false;
+
   if (cmd_ref == cmd_show_window_.ref()) {
     cmd_handler_->OnCommand(Cmd::showWindow);
   } else
@@ -63,7 +67,7 @@ bool LandExMenu::OnCommand(XPLMCommandRef cmd_ref, XPLMCommandPhase phase) {
     cmd_handler_->OnCommand(Cmd::clearWindow);
   }
 
-  return true;
+  return false;
 }
 
 }  // namespace xplmpp

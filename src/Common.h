@@ -15,46 +15,22 @@
 //
 // -----------------------------------------------------------------------------
 //
-// Main plugin window.
+// Common declarations.
 
-#ifndef LANDEX_WINDOW_H
-#define LANDEX_WINDOW_H
+#ifndef LANDEX_COMMON_H
+#define LANDEX_COMMON_H
 
-#include "Common.h"
+// Disable annoying MSVC warnings at /W4
+#ifdef _MSC_VER
+#pragma warning(disable:4100) /* unreferenced formal paramete */
+#pragma warning(disable:4127) /* conditional expression is constant */
+#endif // _MSC_VER
 
-#include <vector>
-
-#include "xplmpp/XPLMWindow.h"
+// Include abseil headers
+#include "absl/strings/str_cat.h"
 
 namespace xplmpp {
 
-// Represents the plugin window
-class LandExWindow : public XPLMWindow {
-public:
-  LandExWindow();
-  ~LandExWindow() override;
-
-  bool Create(bool vr_enabled);
-  void Destroy();
-
-  void Show();
-  void Hide();
-  void Clear();
-
-  void UpdateOnVRChange(bool vr);
-
-  void AddLine(const std::string& line);
-
-private:
-  // XPLMWindow interface.
-  void OnDrawWindow() override;
-
-  void GetDefaultWindowPos(Rect& rc);
-
-  std::vector<std::string> lines_;
-
-};
-
 }  // namespace xplmpp
 
-#endif  // #ifndef LANDEX_WINDOW_H
+#endif  // #ifndef LANDEX_COMMON_H
