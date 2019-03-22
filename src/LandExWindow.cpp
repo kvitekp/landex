@@ -31,9 +31,9 @@ namespace xplmpp {
 static const int kLineCountLimit = 100;
 
 static const Point kDefWindowPos = Point(50, 150);
-static const Size kDefWindowSize = Size(400, 300);
+static const Size kDefWindowSize = Size(465, 300);
 static const Size kMinWindowSize = Size(100, 100);
-static const Size kMaxWindowSize = Size(600, 1000);
+static const Size kMaxWindowSize = Size(800, 1000);
 
 /*
  * LandEx plugin window implementation.

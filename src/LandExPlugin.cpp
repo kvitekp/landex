@@ -32,6 +32,8 @@ namespace xplmpp {
 #pragma comment(lib, "absl_strings")
 #pragma comment(lib, "absl_internal_throw_delegate")
 
+static const float kReallyFlyingAgl = 5.0f;
+
 namespace {
 
 float RoundOff(float value, float factor = 10.0f) {
@@ -39,7 +41,7 @@ float RoundOff(float value, float factor = 10.0f) {
 }
 
 float MetersPerSecondToFeetPerMinute(float meters_per_second) {
-  return meters_per_second * 3.28084f * 60.0f;
+  return meters_per_second * 196.8504f;
 }
 
 float MetersPerSecondToKnots(float meters_per_second) {
@@ -141,23 +143,35 @@ void LandExPlugin::OnCommand(Cmd cmd) {
 }
 
 void LandExPlugin::OnAirplaneFlying(const FlyingInfo& info) {
+  if (flying_tick_count_++ > 0) {
+    if (!really_flying_ && info.agl >= kReallyFlyingAgl) {
+      window_.AddLine("...");
+      really_flying_ = true;
+    }
+    return;
+  }
+
   std::stringstream sst;
   sst << "Flying:   "
       << "  Vy=" << RoundOff(MetersPerSecondToFeetPerMinute(info.vertical_speed)) << " fpm"
       << "  Vg=" << RoundOff(MetersPerSecondToKnots(info.ground_speed)) << " kts"
-      << "  Agl=" << RoundOff(MetersToFeet(info.agl)) << " ft"
-    ;
+      << "  Agl=" << RoundOff(MetersToFeet(info.agl)) << " ft";
   window_.AddLine(sst.str());
 }
 
 void LandExPlugin::OnAirplaneLanded(const LandingInfo& info) {
+  bool was_really_flying = really_flying_;
+  really_flying_ = false;
+  flying_tick_count_ = 0;
+
   std::stringstream sst;
   sst << "Landed: "
       << "  Vy=" << RoundOff(MetersPerSecondToFeetPerMinute(info.vertical_speed)) << " fpm"
       << "  Vg=" << RoundOff(MetersPerSecondToKnots(info.ground_speed)) << " kts"
-      << "  G=" << RoundOff(info.gforce) << " m/sec^2"
-      << "    " << LandingQuality(fabs(info.vertical_speed))
-      ;
+      << "  G=" << RoundOff(info.gforce) << " m/sec^2";
+  if (was_really_flying) {
+    sst << "    " << LandingQuality(fabs(info.vertical_speed));
+  }
   window_.AddLine(sst.str());
 }
 

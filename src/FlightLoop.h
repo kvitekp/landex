@@ -22,7 +22,7 @@
 
 #include "Common.h"
 
-#define WRITE_TRACE_FILE 0
+#define WRITE_TRACE_FILE 1
 
 #if WRITE_TRACE_FILE
 #include <iostream>
@@ -47,10 +47,10 @@ public:
 private:
   void FindDataSources();
 
-  bool HasLanded();
-  bool IsFlying() { return !HasLanded();  }
+  bool IsFlying();
+  bool HasLanded() { return !IsFlying(); }
 
-  void UpdateState();
+  bool UpdateState();
 
   float OnFlightLoopCallback(float elapsed_since_last_call,
                              float elapsedTimeSinceLastFlightLoop);
@@ -68,16 +68,25 @@ private:
   } state_ = State::unknown;
 
   float first_elapsed_time_since_last_flightLoop_ = 0.0;
+  float time_since_last_flying_report_ = 0.0;
+
+  #define DATAREF_I(getter, member) \
+    XPLMData member; \
+    int getter() { return member.GetDatai(); }
 
   #define DATAREF_F(getter, member) \
     XPLMData member; \
     float getter() { return member.GetDataf(); }
 
-  DATAREF_F(FaxilGear, faxil_gear_) // Gear/ground forces - backward - ACF Z, newtons
-  DATAREF_F(GroundSpeed, ground_speed_) // Ground speed, meters/sec
-  DATAREF_F(VerticalSpeed, vertical_speed_) // The vertical velocity, meters/sec
-  DATAREF_F(GForce, gforce_) // G force, meters/sec^2
-  DATAREF_F(Agl, agl_) // Altitude above ground level, meters
+  DATAREF_I(ReplayMode, replay_mode_)  // Are we in replay mode?
+  DATAREF_F(FaxilGear, faxil_gear_)  // Gear/ground forces - backward - ACF Z, newtons
+  DATAREF_F(GroundSpeed, ground_speed_)  // Ground speed, meters/sec
+  DATAREF_F(VerticalSpeed, vertical_speed_)  // Vertical speed, meters/sec
+  DATAREF_F(GForce, gforce_)  // G force, meters/sec^2
+  DATAREF_F(Agl, agl_)  // Altitude above ground level, meters
+
+#undef DATAREF_I
+#undef DATAREF_F
 
 #if WRITE_TRACE_FILE
   std::ofstream file_;

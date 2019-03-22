@@ -77,6 +77,9 @@ private:
   std::unique_ptr<FlightLoop> flight_loop_;
   std::unique_ptr<XPLMErrorCallback> error_callback_;
 
+  int flying_tick_count_ = 0;
+  bool really_flying_ = false;
+
   XPLMData vr_enabled_;
 };
 

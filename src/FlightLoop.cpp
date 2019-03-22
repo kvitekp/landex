@@ -25,6 +25,7 @@ namespace xplmpp {
 
 static const float kFlightLoopIntervalSeconds = 0.05f;
 static const float kInitialSettleDownTimeout = 3.0f;
+static const float kFlyingCallbackPeriod = 1.0f;
 
 /*
  * LandEx plugin flight loop implementation.
@@ -57,6 +58,7 @@ FlightLoop::~FlightLoop() {
 }
 
 void FlightLoop::FindDataSources() {
+  replay_mode_.Find("sim/operation/prefs/replay_mode");
   faxil_gear_.Find("sim/flightmodel/forces/faxil_gear");
   ground_speed_.Find("sim/flightmodel/position/groundspeed");
   vertical_speed_.Find("sim/flightmodel/position/vh_ind");
@@ -64,11 +66,11 @@ void FlightLoop::FindDataSources() {
   agl_.Find("sim/flightmodel/position/y_agl");
 }
 
-bool FlightLoop::HasLanded() {
-  return FaxilGear() != 0.0;
+bool FlightLoop::IsFlying() {
+  return (!ReplayMode() && FaxilGear() == 0.0) || Agl() > 0.25;
 }
 
-void FlightLoop::UpdateState() {
+bool FlightLoop::UpdateState() {
   switch (state_) {
   case State::unknown:
     state_ = IsFlying() ? State::flying : State::landed;
@@ -78,6 +80,7 @@ void FlightLoop::UpdateState() {
       state_ = State::landed;
       LandingInfo info(GroundSpeed(), VerticalSpeed(), GForce());
       client_->OnAirplaneLanded(info);
+      return true;
     }
     break;
   case State::landed:
@@ -85,9 +88,13 @@ void FlightLoop::UpdateState() {
       state_ = State::flying;
       FlyingInfo info(GroundSpeed(), VerticalSpeed(), Agl());
       client_->OnAirplaneFlying(info);
+      time_since_last_flying_report_ = 0.0;
+      return true;
     }
     break;
   }
+
+  return false;
 }
 
 float FlightLoop::OnFlightLoopCallback(float elapsed_since_last_call,
@@ -99,7 +106,15 @@ float FlightLoop::OnFlightLoopCallback(float elapsed_since_last_call,
       < kInitialSettleDownTimeout) {
     // Do nothing letting things to settle down
   } else {
-    UpdateState();
+    // Update state and provide periodic flying callback
+    if (!UpdateState() && state_ == State::flying) {
+      time_since_last_flying_report_ += elapsed_since_last_call;
+      if (time_since_last_flying_report_ >= kFlyingCallbackPeriod) {
+        FlyingInfo info(GroundSpeed(), VerticalSpeed(), Agl());
+        client_->OnAirplaneFlying(info);
+        time_since_last_flying_report_ = 0.0;
+      }
+    }
   }
 
 #if WRITE_TRACE_FILE
@@ -107,9 +122,11 @@ float FlightLoop::OnFlightLoopCallback(float elapsed_since_last_call,
         << " gs=" << GroundSpeed()
         << " vs=" << VerticalSpeed()
         << " gf=" << GForce()
+        << " agl=" << Agl()
 #if 0
         << " elapsed_since_last_call=" << elapsed_since_last_call
         << " elapsed_time_since_last_flightLoop=" << elapsed_time_since_last_flightLoop
+        << " replay_mode=" << ReplayMode()
 #endif
         << "\n";
 #endif
