@@ -151,12 +151,12 @@ void LandExPlugin::OnAirplaneFlying(const FlyingInfo& info) {
     return;
   }
 
-  std::stringstream sst;
-  sst << "Flying:   "
-      << "  Vy=" << RoundOff(MetersPerSecondToFeetPerMinute(info.vertical_speed)) << " fpm"
-      << "  Vg=" << RoundOff(MetersPerSecondToKnots(info.ground_speed)) << " kts"
-      << "  Agl=" << RoundOff(MetersToFeet(info.agl)) << " ft";
-  window_.AddLine(sst.str());
+  std::stringstream s;
+  s << "Flying:   "
+    << "  Vy=" << RoundOff(MetersPerSecondToFeetPerMinute(info.vertical_speed)) << " fpm"
+    << "  Vg=" << RoundOff(MetersPerSecondToKnots(info.ground_speed)) << " kts"
+    << "  Agl=" << RoundOff(MetersToFeet(info.agl)) << " ft";
+  window_.AddLine(s.str());
 }
 
 void LandExPlugin::OnAirplaneLanded(const LandingInfo& info) {
@@ -164,15 +164,15 @@ void LandExPlugin::OnAirplaneLanded(const LandingInfo& info) {
   really_flying_ = false;
   flying_tick_count_ = 0;
 
-  std::stringstream sst;
-  sst << "Landed: "
-      << "  Vy=" << RoundOff(MetersPerSecondToFeetPerMinute(info.vertical_speed)) << " fpm"
-      << "  Vg=" << RoundOff(MetersPerSecondToKnots(info.ground_speed)) << " kts"
-      << "  G=" << RoundOff(info.gforce) << " m/sec^2";
+  std::stringstream s;
+  s << "Landed: "
+    << "  Vy=" << RoundOff(MetersPerSecondToFeetPerMinute(info.vertical_speed)) << " fpm"
+    << "  Vg=" << RoundOff(MetersPerSecondToKnots(info.ground_speed)) << " kts"
+    << "  G=" << RoundOff(info.gforce) << " m/sec^2";
   if (was_really_flying) {
-    sst << "    " << LandingQuality(fabs(info.vertical_speed));
+    s << "    " << LandingQuality(fabs(info.vertical_speed));
   }
-  window_.AddLine(sst.str());
+  window_.AddLine(s.str());
 }
 
 void LandExPlugin::OnPluginError(const char* error) {

@@ -20,6 +20,7 @@
 #include "LandExWindow.h"
 
 #include "xplmpp/XPLMScreen.h"
+#include "xplmpp/XPLMLog.h"
 #include "xplmpp/Point.h"
 #include "xplmpp/Rect.h"
 #include "xplmpp/Size.h"
@@ -100,6 +101,8 @@ void LandExWindow::GetDefaultWindowPos(Rect& rc) {
   rc.bottom = rcScreenBounds.bottom + kDefWindowPos.y;
   rc.right = rc.left + kDefWindowSize.width;
   rc.top = rc.bottom + kDefWindowSize.height;
+
+  LOG(INFO, absl::StrCat("LandExWindow::GetDefaultWindowPos: lbrt=", rc.ToString()));
 }
 
 void LandExWindow::OnDrawWindow() {
