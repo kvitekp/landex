@@ -141,6 +141,9 @@
     <ClInclude Include="src\Common.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="src\GlideSlope.h">
+      <Filter>src</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\xplmpp\XPLMLog.cpp">
@@ -184,6 +187,9 @@
     </ClCompile>
     <ClCompile Include="..\xplmpp\XPLMErrorCallback.cpp">
       <Filter>xplmpp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GlideSlope.cpp">
+      <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

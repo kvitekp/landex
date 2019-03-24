@@ -47,6 +47,7 @@
     <ClInclude Include="..\xplmpp\XPLMWindow.h" />
     <ClInclude Include="src\Common.h" />
     <ClInclude Include="src\FlightLoopClient.h" />
+    <ClInclude Include="src\GlideSlope.h" />
     <ClInclude Include="src\LandExCmdHandler.h" />
     <ClInclude Include="src\FlightLoop.h" />
     <ClInclude Include="src\LandExMenu.h" />
@@ -65,6 +66,7 @@
     <ClCompile Include="..\xplmpp\XPLMScreen.cpp" />
     <ClCompile Include="..\xplmpp\XPLMWindow.cpp" />
     <ClCompile Include="src\FlightLoop.cpp" />
+    <ClCompile Include="src\GlideSlope.cpp" />
     <ClCompile Include="src\LandExMenu.cpp" />
     <ClCompile Include="src\LandExPlugin.cpp" />
     <ClCompile Include="src\LandExWindow.cpp" />

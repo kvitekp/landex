@@ -27,13 +27,15 @@
 
 #include "XPLMGraphics.h"
 
+#include "GlideSlope.h"
+
 namespace xplmpp {
 
 static const int kLineCountLimit = 100;
 
 static const Point kDefWindowPos = Point(50, 150);
 static const Size kDefWindowSize = Size(465, 300);
-static const Size kMinWindowSize = Size(100, 100);
+static const Size kMinWindowSize = Size(465, 150);
 static const Size kMaxWindowSize = Size(800, 1000);
 
 /*
@@ -106,7 +108,6 @@ void LandExWindow::GetDefaultWindowPos(Rect& rc) {
 }
 
 void LandExWindow::OnDrawWindow() {
-#if 1
   ::XPLMSetGraphicsState(
       0 /* no fog */,
       0 /* 0 texture units */,
@@ -120,6 +121,17 @@ void LandExWindow::OnDrawWindow() {
   Rect rc;
   GetWindowGeometry(rc);
 
+  int glide_slope_bottom = rc.Center().y;
+
+  RectF rc_glide_slope(
+    static_cast<float>(rc.left),
+    static_cast<float>(rc.top),
+    static_cast<float>(rc.right),
+    static_cast<float>(glide_slope_bottom));
+
+  GlideSlope glide_slope(rc_glide_slope);
+  glide_slope.Draw();
+
   int char_width, char_height;
   ::XPLMGetFontDimensions(xplmFont_Proportional, &char_width, &char_height, nullptr);
 
@@ -129,14 +141,13 @@ void LandExWindow::OnDrawWindow() {
   int x = rc.left;
   int y = rc.bottom + text_height - line_height;
   for (const std::string& line : lines_) {
-    if (y < rc.top) {
+    if (y + line_height < glide_slope_bottom) {
       static float clr_white[] = { 1.0, 1.0, 1.0 };
       ::XPLMDrawString(clr_white, x, y, const_cast <char*>(line.c_str()), nullptr, xplmFont_Proportional);
     }
 
     y -= line_height;
   }
-#endif
 }
 
 }  // namespace xplmpp

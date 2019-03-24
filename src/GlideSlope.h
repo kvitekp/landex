@@ -15,22 +15,33 @@
 //
 // -----------------------------------------------------------------------------
 //
-// Common declarations.
+// Glide slope drawing.
 
-#ifndef LANDEX_COMMON_H
-#define LANDEX_COMMON_H
+#ifndef LANDEX_GLIDESLOPE_H
+#define LANDEX_GLIDESLOPE_H
 
-// Disable annoying MSVC warnings at /W4
-#ifdef _MSC_VER
-#pragma warning(disable:4100) /* unreferenced formal parameter */
-#pragma warning(disable:4127) /* conditional expression is constant */
-#endif // _MSC_VER
+#include "Common.h"
 
-// Include common abseil headers
-#include "absl/strings/str_cat.h"
+#include "xplmpp/XPLMScreen.h"
+#include "xplmpp/Rect.h"
 
 namespace xplmpp {
 
+// Represents the glide slope
+class GlideSlope {
+public:
+  GlideSlope(const RectF& rc);
+  ~GlideSlope();
+
+  void Draw();
+
+private:
+  void DrawFrame();
+  void DrawSlope();
+
+  RectF rc_;
+};
+
 }  // namespace xplmpp
 
-#endif  // #ifndef LANDEX_COMMON_H
+#endif  // #ifndef LANDEX_GLIDESLOPE_H
