@@ -15,33 +15,56 @@
 //
 // -----------------------------------------------------------------------------
 //
-// Glide slope drawing.
+// Plugin flight data.
 
-#ifndef LANDEX_GLIDESLOPE_H
-#define LANDEX_GLIDESLOPE_H
+#ifndef LANDEX_FLIGHTDATA_H
+#define LANDEX_FLIGHTDATA_H
+
+#include <vector>
 
 #include "Common.h"
-
-#include "xplmpp/XPLMScreen.h"
 #include "xplmpp/Rect.h"
 
 namespace xplmpp {
 
-// Represents the glide slope
-class GlideSlope {
-public:
-  GlideSlope(const RectF& rc);
-  ~GlideSlope();
+// Represents the plugin flight data
+struct Data {
+  Data(float time, float ground_speed, float vertical_speed, float agl, bool flying)
+  : time(time)
+  , ground_speed(ground_speed)
+  , vertical_speed(vertical_speed)
+  , agl(agl)
+  , flying(flying) {}
 
-  void Draw();
+  float time;
+  float ground_speed;
+  float vertical_speed;
+  float agl;
+  bool flying;
+};
+
+class FlightData : public std::vector<Data> {
+public:
+  FlightData() = default;
+  ~FlightData() = default;
+
+  void Add(const Data& data);
+
+  bool HasLanding() const {
+    return landing_index_ > 0;
+  }
+
+  bool GetLanding(const_iterator& it) const;
+
+  void Reset();
 
 private:
-  void DrawFrame();
-  void DrawSlope(const RectF& rc);
+  size_t landing_index_ = 0;
 
-  RectF rc_;
 };
+
+extern FlightData g_flight_data;
 
 }  // namespace xplmpp
 
-#endif  // #ifndef LANDEX_GLIDESLOPE_H
+#endif  // #ifndef LANDEX_FLIGHTDATA_H

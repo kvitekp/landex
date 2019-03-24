@@ -19,7 +19,11 @@
 
 #include "FlightLoop.h"
 
+#include "xplmpp/XPLMLog.h"
+
 #include "XPLMProcessing.h"
+
+#include "FlightData.h"
 
 namespace xplmpp {
 
@@ -27,9 +31,6 @@ static const float kFlightLoopIntervalSeconds = 0.05f;
 static const float kInitialSettleDownTimeout = 3.0f;
 static const float kFlyingCallbackPeriod = 1.0f;
 
-/*
- * LandEx plugin flight loop implementation.
- */
 std::unique_ptr<FlightLoop> FlightLoop::Create(FlightLoopClient* client) {
   return std::make_unique<FlightLoop>(client);
 }
@@ -51,7 +52,7 @@ FlightLoop::FlightLoop(FlightLoopClient* client)
 
 FlightLoop::~FlightLoop() {
   ::XPLMUnregisterFlightLoopCallback(FlightLoopCallback, this);
-
+  g_flight_data.Reset();
 #if WRITE_TRACE_FILE
   file_.close();
 #endif
@@ -115,6 +116,11 @@ float FlightLoop::OnFlightLoopCallback(float elapsed_since_last_call,
         time_since_last_flying_report_ = 0.0;
       }
     }
+
+    // Append flight data
+    g_flight_data.Add(
+      Data(elapsed_time_since_last_flightLoop, GroundSpeed(), VerticalSpeed(),
+           Agl(), IsFlying()));
   }
 
 #if WRITE_TRACE_FILE

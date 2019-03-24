@@ -144,6 +144,9 @@
     <ClInclude Include="src\GlideSlope.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="src\FlightData.h">
+      <Filter>src</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\xplmpp\XPLMLog.cpp">
@@ -189,6 +192,9 @@
       <Filter>xplmpp</Filter>
     </ClCompile>
     <ClCompile Include="src\GlideSlope.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\FlightData.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>

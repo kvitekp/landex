@@ -23,6 +23,8 @@
 
 #include "xplmpp/XPLMLog.h"
 
+#include "FlightData.h"
+
 namespace xplmpp {
 
 #define ACTIVATE_PLUGIN_ERROR_CALLBACK 1
@@ -32,7 +34,7 @@ namespace xplmpp {
 #pragma comment(lib, "absl_strings")
 #pragma comment(lib, "absl_internal_throw_delegate")
 
-static const float kReallyFlyingAgl = 5.0f;
+static const float kReallyFlyingAgl = 10.0f;
 
 namespace {
 
@@ -138,6 +140,7 @@ void LandExPlugin::OnCommand(Cmd cmd) {
       break;
     case Cmd::clearWindow:
       window_.Clear();
+      g_flight_data.Reset();
       break;
   }
 }
@@ -147,6 +150,7 @@ void LandExPlugin::OnAirplaneFlying(const FlyingInfo& info) {
     if (!really_flying_ && info.agl >= kReallyFlyingAgl) {
       window_.AddLine("...");
       really_flying_ = true;
+      g_flight_data.Reset();
     }
     return;
   }

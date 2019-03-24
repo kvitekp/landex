@@ -36,7 +36,7 @@
 
 namespace xplmpp {
 
-// Represents the plugin menu
+// Represents the plugin flight loop
 class FlightLoop {
 public:
   FlightLoop(FlightLoopClient* client);
