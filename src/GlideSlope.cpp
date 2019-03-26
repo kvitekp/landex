@@ -175,7 +175,7 @@ void GlideSlope::DrawSlope(const RectF& rc) {
   }
 
   // Now walk the flight data forward from the landing moment to draw
-  // the flight path after langing.
+  // the flight path after landing.
   { glColor4fv(kSlopeClrPath2);
     glBegin(GL_LINE_STRIP);
 

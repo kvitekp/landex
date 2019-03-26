@@ -27,7 +27,7 @@
 
 namespace xplmpp {
 
-#define ACTIVATE_PLUGIN_ERROR_CALLBACK 1
+#define ACTIVATE_PLUGIN_ERROR_CALLBACK 0
 
 // Force abseil libraries
 #pragma comment(lib, "absl_base")
