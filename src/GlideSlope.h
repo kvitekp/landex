@@ -37,9 +37,20 @@ public:
 
 private:
   void DrawFrame();
-  void DrawSlope(const RectF& rc);
+  void DrawGrid();
+  void DrawSlope();
+  void DrawFlightPath();
 
-  RectF rc_;
+  float WorldToWindowX(float x);
+  float WorldToWindowY(float y);
+  PointF WorldToWindow(const PointF& pt);
+
+  RectF rc_;       // Caller's rectangle (frame)
+  RectF rc_view_;  // View rectangle (caller's rectangle sans view margins)
+  RectF rc_slope_; // Slope rectangle (BL=landing point, TR = slope top center)
+
+  float slope_height_; // Slope triangle height on the right (window)
+  PointF slope_right_; // Slope center right in world coordinates
 };
 
 }  // namespace xplmpp

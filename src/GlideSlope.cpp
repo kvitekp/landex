@@ -26,22 +26,28 @@
 namespace xplmpp {
 
 static const float kFrameClr[] = { 1.0f, 1.0f, 1.0f, 0.5f };
+static const float kSlopeClrGrid[] = { 1.0f, 1.0f, 1.0f, 0.2f };
 static const float kSlopeClrOuter[] = { 1.0f, 1.0f, 1.0f, 0.2f };
 static const float kSlopeClrInner[] = { 1.0f, 1.0f, 1.0f, 0.25f };
 static const float kSlopeClrCenter[] = { 1.0f, 1.0f, 1.0f, 0.3f };
 static const float kSlopeClrPath[]  = { 1.0f, 0.0f, 0.0f, 1.0f };
 static const float kSlopeClrPath2[] = { 0.0f, 1.0f, 0.0f, 1.0f };
 
-static const float kSlopeMargin = 0.005f;
-static const float kSlopeLeftOffset = 0.05f;
+static const float kViewMargin = 0.005f;
 static const float kSlopeTopOffset = 0.05f;
-static const float kSlopeRightHeight = 0.25f;
+static const float kSlopeHeight = 0.25f;
 
 static const float kPtDifferenceThreshold = 0.5f;
 
-// Standard slopes 3nm 1000ft AGL point in meters. Corresponds to our center
-// right point of the slope.
-static const PointF kStandardSlopeTop(3 * 1852.0f, 1000 * 0.3048f);
+static const float kTan3 = 0.05240778f;
+static const float kFtToMeters = 0.3048f;
+static const float kNmToMeters = 1852.0f;
+
+static const float kRunwayDistance = 0.5 * kNmToMeters;
+static const float kApproachDistance = 1.5 * kNmToMeters;
+
+static const float kVGrid = 1 * kNmToMeters;
+static const float kHGrid = 500 * kFtToMeters;
 
 namespace {
 
@@ -53,11 +59,8 @@ T Scale(T v0, T v0min, T v0max, T v1min, T v1max) {
   return v1min + ((v0 - v0min) * (v1max - v1min)) / (v0max - v0min);
 }
 
-PointF PosToWindow(const PointF& pos, const RectF& rc) {
-  PointF pt;
-  pt.x = Scale(pos.x, 0.0f, kStandardSlopeTop.x, rc.left, rc.right);
-  pt.y = Scale(pos.y, 0.0f, kStandardSlopeTop.y, rc.bottom, rc.top);
-  return pt;
+float DistanceToHeight(float distance) {
+  return distance * kTan3;
 }
 
 bool PtDifference(const PointF& pt, const PointF& pt2) {
@@ -69,85 +72,110 @@ bool PtDifference(const PointF& pt, const PointF& pt2) {
 
 GlideSlope::GlideSlope(const RectF& rc)
 : rc_(rc) {
+  // Calculate view rectangle: frame rectangle sans view margin.
+  rc_view_ = rc_;
+  rc_view_.Deflate(rc_.Width() * kViewMargin, rc_.Height() * kViewMargin);
+
+  // Calculate slope rectangle with bottom left at landing point and
+  // top right at slope center on the right.
+  slope_height_ = rc_view_.Height() * kSlopeHeight;
+
+  rc_slope_.left = rc_view_.left +
+      kRunwayDistance * rc_view_.Width() / (kRunwayDistance + kApproachDistance);
+  rc_slope_.bottom = rc_view_.bottom;
+  rc_slope_.right = rc_view_.right;
+  rc_slope_.top =
+      rc_view_.top - rc_view_.Height() * kSlopeTopOffset - slope_height_ / 2;
+
+  // Calculate slope right center point in world coordinates
+  slope_right_.x = kApproachDistance;
+  slope_right_.y = DistanceToHeight(kApproachDistance);
+
+//LOG(INFO, absl::StrCat("GlideSlope::ctor: slope_right=", slope_right_.ToString()));
 }
 
 GlideSlope::~GlideSlope() {
 }
 
 void GlideSlope::Draw() {
+  glLineWidth(1.0);
+
   DrawFrame();
-
-  // Figure out slope geometry
-  RectF rc = rc_;
-  rc.Deflate(rc_.Width() * kSlopeMargin, rc_.Height() * kSlopeMargin);
-
-  PointF slope_left(rc.left + rc_.Width() * kSlopeLeftOffset, rc.bottom);
-
-  float slope_top = rc.top - rc_.Height() * kSlopeTopOffset;
-  float slope_right_height = rc_.Height() * kSlopeRightHeight;
-  float slope_bottom = slope_top - slope_right_height;
-  float slope_inner_offset = slope_right_height / 3;
-  float slope_center_right = slope_top - slope_right_height / 2;
-
-  // Draw outer slope area
-  glColor4fv(kSlopeClrOuter);
-  glBegin(GL_POLYGON);
-  glVertex2(slope_left);
-  glVertex2f(rc.right, slope_top);
-  glVertex2f(rc.right, slope_bottom);
-  glEnd();
-
-  // Draw inner slope area
-  glColor4fv(kSlopeClrInner);
-  glBegin(GL_POLYGON);
-  glVertex2(slope_left);
-  glVertex2f(rc.right, slope_top - slope_inner_offset);
-  glVertex2f(rc.right, slope_bottom + slope_inner_offset);
-  glEnd();
-
-  // Draw center slope line
-  glColor4fv(kSlopeClrCenter);
-  glBegin(GL_LINE_STRIP);
-  glVertex2(slope_left);
-  glVertex2f(rc.right, slope_center_right);
-  glEnd();
-
-  // Draw slope if we have flight data
-  if (g_flight_data.HasLanding()) {
-    RectF rc_slope;
-    rc_slope.left = slope_left.x;
-    rc_slope.bottom = slope_left.y;
-    rc_slope.right = rc.right;
-    rc_slope.top = slope_center_right;
-    DrawSlope(rc_slope);
-  }
+  DrawGrid();
+  DrawSlope();
+  DrawFlightPath();
 }
 
 void GlideSlope::DrawFrame() {
-  glLineWidth(1.0);
   glColor4fv(kFrameClr);
   glBegin(GL_LINE_LOOP);
   glVertex2(rc_);
   glEnd();
 }
 
-void GlideSlope::DrawSlope(const RectF& rc) {
+void GlideSlope::DrawGrid() {
+  glColor4fv(kSlopeClrGrid);
+  glBegin(GL_LINES);
+
+  // Draw vertical grid lines every 1 nm
+  float v_grid = WorldToWindowX(kVGrid) - WorldToWindowX(0);
+  for (float x = rc_slope_.left; x <= rc_view_.right; x += v_grid) {
+    glVertex2f(x, rc_view_.bottom);
+    glVertex2f(x, rc_view_.top);
+  }
+
+  // Draw horizontal grid lines every 100 ft
+  float h_grid = WorldToWindowY(kHGrid) - WorldToWindowY(0);
+  for (float y = rc_slope_.bottom; y <= rc_view_.top; y += h_grid) {
+    glVertex2f(rc_view_.left, y);
+    glVertex2f(rc_view_.right, y);
+  }
+
+  glEnd();
+}
+
+void GlideSlope::DrawSlope() {
+  // Draw outer slope area
+  glColor4fv(kSlopeClrOuter);
+  glBegin(GL_POLYGON);
+  glVertex2(rc_slope_.BottomLeft());
+  glVertex2f(rc_slope_.right, rc_slope_.top + slope_height_ / 2);
+  glVertex2f(rc_slope_.right, rc_slope_.top - slope_height_ / 2);
+  glEnd();
+
+  // Draw inner slope area
+  glColor4fv(kSlopeClrInner);
+  glBegin(GL_POLYGON);
+  glVertex2(rc_slope_.BottomLeft());
+  glVertex2f(rc_slope_.right, rc_slope_.top + slope_height_ / 6);
+  glVertex2f(rc_slope_.right, rc_slope_.top - slope_height_ / 6);
+  glEnd();
+
+  // Draw slope center line
+  glColor4fv(kSlopeClrCenter);
+  glBegin(GL_LINE_STRIP);
+  glVertex2(rc_slope_.BottomLeft());
+  glVertex2(rc_slope_.TopRight());
+  glEnd();
+}
+
+void GlideSlope::DrawFlightPath() {
   FlightData::const_iterator it_landing;
   if (!g_flight_data.GetLanding(it_landing))
     return;
 
-  //LOG(INFO, absl::StrCat("GlideSlope::DrawSlope: rc=", rc.ToString(), " flight_data.size=", g_flight_data.size()));
+  //LOG(INFO, absl::StrCat("GlideSlope::DrawFlightPath: rc=", rc.ToString(), " flight_data.size=", g_flight_data.size()));
 
   // The landing point corresponds to the bottom left point of the standard
   // slope rectangle, so walk the flight data back in time to draw the flight
-  // path before langing.
+  // path before landing.
   { glColor4fv(kSlopeClrPath);
     glBegin(GL_LINE_STRIP);
 
     PointF pos(0);
     float prev_time = it_landing->time;
     float prev_ground_speed = it_landing->ground_speed;
-    PointF prev_pt(rc.BottomLeft());
+    PointF prev_pt(rc_slope_.BottomLeft());
     glVertex2(prev_pt);
 
     for (FlightData::const_iterator it = --it_landing; it != g_flight_data.cbegin(); --it) {
@@ -156,11 +184,11 @@ void GlideSlope::DrawSlope(const RectF& rc) {
       pos.x += distance;
       pos.y = it->agl;
 
-      PointF pt = PosToWindow(pos, rc);
+      PointF pt = WorldToWindow(pos);
       if (!rc_.PtInRect(pt))
         break;
 
-      //LOG(INFO, absl::StrCat("GlideSlope::DrawSlope:<pos=", pos.ToString(), " pt=", pt.ToString()));
+      //LOG(INFO, absl::StrCat("GlideSlope::DrawFlightPath:>pos=", pos.ToString(), " pt=", pt.ToString()));
 
       if (PtDifference(prev_pt, pt)) {
         glVertex2(pt);
@@ -182,7 +210,7 @@ void GlideSlope::DrawSlope(const RectF& rc) {
     PointF pos(0);
     float prev_time = it_landing->time;
     float prev_ground_speed = it_landing->ground_speed;
-    PointF prev_pt(rc.BottomLeft());
+    PointF prev_pt(rc_slope_.BottomLeft());
     glVertex2(prev_pt);
 
     for (FlightData::const_iterator it = it_landing; it != g_flight_data.cend(); ++it) {
@@ -191,11 +219,11 @@ void GlideSlope::DrawSlope(const RectF& rc) {
       pos.x -= distance;
       pos.y = it->agl;
 
-      PointF pt = PosToWindow(pos, rc);
+      PointF pt = WorldToWindow(pos);
       if (!rc_.PtInRect(pt))
         break;
 
-      //LOG(INFO, absl::StrCat("GlideSlope::DrawSlope:>pos=", pos.ToString(), " pt=", pt.ToString()));
+      //LOG(INFO, absl::StrCat("GlideSlope::DrawFlightPath:<pos=", pos.ToString(), " pt=", pt.ToString()));
 
       if (PtDifference(prev_pt, pt)) {
         glVertex2(pt);
@@ -208,8 +236,18 @@ void GlideSlope::DrawSlope(const RectF& rc) {
 
     glEnd();
   }
+}
 
+float GlideSlope::WorldToWindowX(float x) {
+  return Scale(x, 0.0f, slope_right_.x, rc_slope_.left, rc_slope_.right);
+}
 
+float GlideSlope::WorldToWindowY(float y) {
+  return Scale(y, 0.0f, slope_right_.y, rc_slope_.bottom, rc_slope_.top);
+}
+
+PointF GlideSlope::WorldToWindow(const PointF& pt) {
+  return PointF(WorldToWindowX(pt.x), WorldToWindowY(pt.y));
 }
 
 }  // namespace xplmpp

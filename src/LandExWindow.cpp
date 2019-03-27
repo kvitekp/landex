@@ -21,9 +21,7 @@
 
 #include "xplmpp/XPLMScreen.h"
 #include "xplmpp/XPLMLog.h"
-#include "xplmpp/Point.h"
 #include "xplmpp/Rect.h"
-#include "xplmpp/Size.h"
 
 #include "XPLMGraphics.h"
 
