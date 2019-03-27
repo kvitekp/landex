@@ -76,10 +76,11 @@ GlideSlope::GlideSlope(const RectF& rc)
   rc_view_ = rc_;
   rc_view_.Deflate(rc_.Width() * kViewMargin, rc_.Height() * kViewMargin);
 
-  // Calculate slope rectangle with bottom left at landing point and
-  // top right at slope center on the right.
+  // Calculate slope vertical height on the right.
   slope_height_ = rc_view_.Height() * kSlopeHeight;
 
+  // Calculate slope rectangle with bottom left at landing point and
+  // top right at the slope center on the right.
   rc_slope_.left = rc_view_.left +
       kRunwayDistance * rc_view_.Width() / (kRunwayDistance + kApproachDistance);
   rc_slope_.bottom = rc_view_.bottom;
@@ -188,7 +189,7 @@ void GlideSlope::DrawFlightPath() {
       if (!rc_.PtInRect(pt))
         break;
 
-      LOG(INFO) << "GlideSlope::DrawFlightPath: pos=" << pos << " pt=" << pt;
+      //LOG(INFO) << "GlideSlope::DrawFlightPath: pos=" << pos << " pt=" << pt;
 
       if (PtDifference(prev_pt, pt)) {
         glVertex2(pt);
@@ -223,7 +224,7 @@ void GlideSlope::DrawFlightPath() {
       if (!rc_.PtInRect(pt))
         break;
 
-      LOG(INFO) << "GlideSlope::DrawFlightPath: pos=" << pos << " pt=" << pt;
+      //LOG(INFO) << "GlideSlope::DrawFlightPath: pos=" << pos << " pt=" << pt;
 
       if (PtDifference(prev_pt, pt)) {
         glVertex2(pt);

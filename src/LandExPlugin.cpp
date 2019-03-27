@@ -76,7 +76,7 @@ LandExPlugin::LandExPlugin()
 , signature_("com.kvitek.x-plane.landex")
 , description_("A plugin that displays landing statistics.")
 , menu_(this) {
-  g_log.set_prefix("[LandEx] ");
+  g_log.set_prefix_provider([] { return std::string("[LandEx] "); });
   g_log.set_log_writer(::XPLMDebugString);
 }
 
