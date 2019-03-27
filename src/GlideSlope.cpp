@@ -91,7 +91,7 @@ GlideSlope::GlideSlope(const RectF& rc)
   slope_right_.x = kApproachDistance;
   slope_right_.y = DistanceToHeight(kApproachDistance);
 
-//LOG(INFO, absl::StrCat("GlideSlope::ctor: slope_right=", slope_right_.ToString()));
+  //LOG(INFO) << "GlideSlope::ctor: slope_right=" << slope_right_;
 }
 
 GlideSlope::~GlideSlope() {
@@ -164,7 +164,7 @@ void GlideSlope::DrawFlightPath() {
   if (!g_flight_data.GetLanding(it_landing))
     return;
 
-  //LOG(INFO, absl::StrCat("GlideSlope::DrawFlightPath: rc=", rc.ToString(), " flight_data.size=", g_flight_data.size()));
+  LOG(INFO) << "GlideSlope::DrawFlightPath: flight_data.size=", g_flight_data.size();
 
   // The landing point corresponds to the bottom left point of the standard
   // slope rectangle, so walk the flight data back in time to draw the flight
@@ -188,7 +188,7 @@ void GlideSlope::DrawFlightPath() {
       if (!rc_.PtInRect(pt))
         break;
 
-      //LOG(INFO, absl::StrCat("GlideSlope::DrawFlightPath:>pos=", pos.ToString(), " pt=", pt.ToString()));
+      LOG(INFO) << "GlideSlope::DrawFlightPath: pos=" << pos << " pt=" << pt;
 
       if (PtDifference(prev_pt, pt)) {
         glVertex2(pt);
@@ -223,7 +223,7 @@ void GlideSlope::DrawFlightPath() {
       if (!rc_.PtInRect(pt))
         break;
 
-      //LOG(INFO, absl::StrCat("GlideSlope::DrawFlightPath:<pos=", pos.ToString(), " pt=", pt.ToString()));
+      LOG(INFO) << "GlideSlope::DrawFlightPath: pos=" << pos << " pt=" << pt;
 
       if (PtDifference(prev_pt, pt)) {
         glVertex2(pt);

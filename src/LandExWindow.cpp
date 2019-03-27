@@ -51,6 +51,8 @@ bool LandExWindow::Create(bool vr_enabled) {
   if (!XPLMWindow::Create(rc))
     return false;
 
+  LOG(VERBOSE) << "Default window rc=" << rc;
+
   SetWindowPositioningMode(vr_enabled ? xplm_WindowVR : xplm_WindowPositionFree);
   SetWindowResizingLimits(kMinWindowSize, kMaxWindowSize);
   SetWindowTitle("Landing log");
@@ -101,8 +103,6 @@ void LandExWindow::GetDefaultWindowPos(Rect& rc) {
   rc.bottom = rcScreenBounds.bottom + kDefWindowPos.y;
   rc.right = rc.left + kDefWindowSize.width;
   rc.top = rc.bottom + kDefWindowSize.height;
-
-  LOG(INFO, absl::StrCat("LandExWindow::GetDefaultWindowPos: lbrt=", rc.ToString()));
 }
 
 void LandExWindow::OnDrawWindow() {

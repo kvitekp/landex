@@ -76,14 +76,14 @@ LandExPlugin::LandExPlugin()
 , signature_("com.kvitek.x-plane.landex")
 , description_("A plugin that displays landing statistics.")
 , menu_(this) {
-  g_log.set_prefix("LandEx: ");
+  g_log.set_prefix("[LandEx] ");
 }
 
 LandExPlugin::~LandExPlugin() {
 }
 
 bool LandExPlugin::OnStart(char* name, char* signature, char* description) {
-  LOG(INFO, "LandExPlugin::OnStart: ");
+  LOG(INFO) << "LandExPlugin::OnStart: ";
 
 #if ACTIVATE_PLUGIN_ERROR_CALLBACK
   error_callback_ = std::make_unique<XPLMErrorCallback>(this);
@@ -99,25 +99,25 @@ bool LandExPlugin::OnStart(char* name, char* signature, char* description) {
 }
 
 bool LandExPlugin::OnEnable() {
-  LOG(INFO, "LandExPlugin::OnEnable: ");
+  LOG(INFO) << "LandExPlugin::OnEnable: ";
 
   return Init();
 }
 
 void LandExPlugin::OnDisable() {
-  LOG(INFO, "LandExPlugin::OnDisable: ");
+  LOG(INFO) << "LandExPlugin::OnDisable: ";
 
   Quit();
 }
 
 void LandExPlugin::OnStop() {
-  LOG(INFO, "LandExPlugin::OnStop: ");
+  LOG(INFO) << "LandExPlugin::OnStop: ";
 
   Quit();
 }
 
 void LandExPlugin::OnReceiveMessage(XPLMPluginID from, int msg, void* param) {
-  LOG(INFO, absl::StrCat("LandExPlugin::OnReceiveMessage: from=", from, " msg=", msg));
+  LOG(INFO) << "LandExPlugin::OnReceiveMessage: from=" << from << " msg=" << msg;
 
   if (from == XPLM_PLUGIN_XPLANE) {
     switch (msg) {
@@ -132,7 +132,7 @@ void LandExPlugin::OnReceiveMessage(XPLMPluginID from, int msg, void* param) {
 }
 
 void LandExPlugin::OnCommand(Cmd cmd) {
-  LOG(INFO, absl::StrCat("LandExPlugin::OnCommand: cmd=", (int)cmd));
+  LOG(INFO) << "LandExPlugin::OnCommand: cmd=" << (int)cmd;
 
   switch (cmd) {
     case Cmd::showWindow:
@@ -180,17 +180,17 @@ void LandExPlugin::OnAirplaneLanded(const LandingInfo& info) {
 }
 
 void LandExPlugin::OnPluginError(const char* error) {
-  LOG(ERROR, error);
+  LOG(ERROR) << error;
 }
 
 bool LandExPlugin::Init() {
   if (!window_.Create(IsVREnabled())) {
-    LOG(FATAL, "Could not create the window.");
+    LOG(FATAL) << "Could not create the window.";
     return false;
   }
 
   if (!menu_.Create()) {
-    LOG(FATAL, "Could not create the menu.");
+    LOG(FATAL) << "Could not create the menu.";
     return false;
   }
 
