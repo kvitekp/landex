@@ -19,9 +19,9 @@
 
 #include "FlightLoop.h"
 
-#include "xplmpp/XPLMLog.h"
-
 #include "XPLMProcessing.h"
+
+#include "xplmpp/Log.h"
 
 #include "FlightData.h"
 

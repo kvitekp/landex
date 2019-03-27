@@ -19,7 +19,7 @@
 
 #include "GlideSlope.h"
 
-#include "xplmpp/XPLMLog.h"
+#include "xplmpp/Log.h"
 
 #include "FlightData.h"
 

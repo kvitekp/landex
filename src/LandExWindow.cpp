@@ -20,7 +20,7 @@
 #include "LandExWindow.h"
 
 #include "xplmpp/XPLMScreen.h"
-#include "xplmpp/XPLMLog.h"
+#include "xplmpp/Log.h"
 #include "xplmpp/Rect.h"
 
 #include "XPLMGraphics.h"

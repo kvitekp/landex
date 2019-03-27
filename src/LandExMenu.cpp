@@ -20,8 +20,8 @@
 #include "LandExMenu.h"
 
 #include "xplmpp/XPLMScreen.h"
-#include "xplmpp/XPLMLog.h"
 #include "xplmpp/Rect.h"
+#include "xplmpp/Log.h"
 
 namespace xplmpp {
 

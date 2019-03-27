@@ -21,7 +21,7 @@
 
 #include <sstream>
 
-#include "xplmpp/XPLMLog.h"
+#include "xplmpp/Log.h"
 
 #include "FlightData.h"
 
@@ -77,6 +77,7 @@ LandExPlugin::LandExPlugin()
 , description_("A plugin that displays landing statistics.")
 , menu_(this) {
   g_log.set_prefix("[LandEx] ");
+  g_log.set_log_writer(::XPLMDebugString);
 }
 
 LandExPlugin::~LandExPlugin() {
