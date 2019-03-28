@@ -147,6 +147,15 @@
     <ClInclude Include="..\xplmpp\Log.h">
       <Filter>xplmpp</Filter>
     </ClInclude>
+    <ClInclude Include="src\Settings.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\xplmpp\Common.h">
+      <Filter>xplmpp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\xplmpp\File.h">
+      <Filter>xplmpp</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\xplmpp\XPLMMonitor.cpp">
@@ -195,6 +204,12 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="..\xplmpp\Log.cpp">
+      <Filter>xplmpp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Settings.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\xplmpp\File.cpp">
       <Filter>xplmpp</Filter>
     </ClCompile>
   </ItemGroup>

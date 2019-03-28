@@ -1,0 +1,52 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="%28rare%29">
+      <UniqueIdentifier>{123b291f-d54f-4178-b424-f8e7ff5951c8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="xplmpp">
+      <UniqueIdentifier>{393d1f4d-27c2-43a6-ab13-683e284ed621}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="SettingsTest.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="pch.cpp">
+      <Filter>%28rare%29</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Settings.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\xplmpp\File.cpp">
+      <Filter>xplmpp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\xplmpp\Log.cpp">
+      <Filter>xplmpp</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="pch.h">
+      <Filter>%28rare%29</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Settings.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\xplmpp\File.h">
+      <Filter>xplmpp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\xplmpp\Log.h">
+      <Filter>xplmpp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\xplmpp\Base.h">
+      <Filter>xplmpp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\xplmpp\Common.h">
+      <Filter>xplmpp</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

@@ -20,17 +20,9 @@
 #ifndef LANDEX_COMMON_H
 #define LANDEX_COMMON_H
 
-// Disable annoying MSVC warnings at /W4
-#ifdef _MSC_VER
-#pragma warning(disable:4100) /* unreferenced formal parameter */
-#pragma warning(disable:4127) /* conditional expression is constant */
-#endif // _MSC_VER
-
-// Include common abseil headers
-#include "absl/strings/str_cat.h"
+#include "xplmpp/Common.h"
 
 namespace xplmpp {
-
 }  // namespace xplmpp
 
 #endif  // #ifndef LANDEX_COMMON_H

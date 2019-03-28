@@ -31,6 +31,8 @@
     <ClInclude Include="..\SDK\CHeaders\XPLM\XPLMScenery.h" />
     <ClInclude Include="..\SDK\CHeaders\XPLM\XPLMUtilities.h" />
     <ClInclude Include="..\xplmpp\Base.h" />
+    <ClInclude Include="..\xplmpp\Common.h" />
+    <ClInclude Include="..\xplmpp\File.h" />
     <ClInclude Include="..\xplmpp\Log.h" />
     <ClInclude Include="..\xplmpp\Point.h" />
     <ClInclude Include="..\xplmpp\Rect.h" />
@@ -54,8 +56,10 @@
     <ClInclude Include="src\LandExMenu.h" />
     <ClInclude Include="src\LandExPlugin.h" />
     <ClInclude Include="src\LandExWindow.h" />
+    <ClInclude Include="src\Settings.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\xplmpp\File.cpp" />
     <ClCompile Include="..\xplmpp\Log.cpp" />
     <ClCompile Include="..\xplmpp\XPLMCommand.cpp" />
     <ClCompile Include="..\xplmpp\XPLMData.cpp" />
@@ -72,6 +76,7 @@
     <ClCompile Include="src\LandExMenu.cpp" />
     <ClCompile Include="src\LandExPlugin.cpp" />
     <ClCompile Include="src\LandExWindow.cpp" />
+    <ClCompile Include="src\Settings.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <SccProjectName />
