@@ -32,6 +32,28 @@ namespace xplmpp {
 
 Settings g_settings;
 
+namespace {
+
+bool ApplyDistanceUnits(float* value, const std::string& units) {
+  if (units == "nm") {
+    *value *= Settings::kNmToMeters;
+  } else
+  if (units == "ft") {
+    *value *= Settings::kFtToMeters;
+  } else
+  if (units == "mi") {
+    *value *= Settings::kMiToMeters;
+  } else
+  if (units == "km") {
+    *value *= Settings::kKmToMeters;
+  } else
+    return false;
+
+  return true;
+}
+
+}  // namespace {
+
 bool Settings::Load(const char* filename) {
   File file;
   if (!file.Open(filename, "rt")) {
@@ -69,32 +91,17 @@ bool Settings::Load(const std::vector<std::string>& vstr) {
   return true;
 }
 
-bool Settings::SetDistance(const std::vector<std::string>& vstr, 
+bool Settings::SetDistance(const std::vector<std::string>& vstr,
                            std::function<void(Settings&, float)> setter) {
-  // Convert value
   float value = 0;
   if (!absl::SimpleAtof(vstr[1], &value)) {
     LOG(WARNING) << "Invalid '" << vstr[0] << "' value, ignored.";
     return false;
   }
 
-  // Convert units, if any
-  if (vstr.size() > 2) {
-    if (vstr[2] == "nm") {
-      value *= Settings::kNmToMeters;
-    } else
-    if (vstr[2] == "ft") {
-      value *= Settings::kFtToMeters;
-    } else
-    if (vstr[2] == "mi") {
-      value *= Settings::kMiToMeters;
-    } else
-    if (vstr[2] == "km") {
-      value *= Settings::kKmToMeters;
-    } else {
-      LOG(WARNING) << "Invalid '" << vstr[0] << "' units ignored.";
-      return false;
-    }
+  if (vstr.size() > 2 && !ApplyDistanceUnits(&value, vstr[2])) {
+    LOG(WARNING) << "Invalid '" << vstr[0] << "' units ignored.";
+    return false;
   }
 
   setter(*this, value);

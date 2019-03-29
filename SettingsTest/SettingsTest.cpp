@@ -17,5 +17,11 @@ int main() {
   Settings settings;
   if (!settings.Load("settings.prf"))
     return 1;
-  
+
+  assert(settings.runway_distance() == 0.5 * Settings::kNmToMeters);
+  assert(settings.approach_distance() == 3 * Settings::kNmToMeters);
+
+  LOG(VERBOSE) << "DONE!";
+
+  return 0;
 }
