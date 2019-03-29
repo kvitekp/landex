@@ -220,8 +220,6 @@
       <ImportLibrary>.\Debug\64\LandEx.lib</ImportLibrary>
       <AdditionalLibraryDirectories>.\x64\Debug;..\SDK\Libraries\Win;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>Opengl32.lib;odbc32.lib;odbccp32.lib;XPLM_64.lib;XPWidgets_64.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <ShowProgress>LinkVerbose</ShowProgress>
-      <LinkStatus>true</LinkStatus>
     </Link>
     <PostBuildEvent>
       <Command>xcopy /S /Y "Debug\plugins" "\X-Plane 11\Resources\plugins"</Command>
@@ -230,9 +228,7 @@
       <Message>Copying plugin into X-Plane11 ...</Message>
     </PostBuildEvent>
     <ProjectReference />
-    <ProjectReference>
-      <UseLibraryDependencyInputs>true</UseLibraryDependencyInputs>
-    </ProjectReference>
+    <ProjectReference />
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
