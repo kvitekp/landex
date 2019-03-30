@@ -37,11 +37,6 @@ public:
     return Load(filename.c_str());
   }
 
-  static constexpr float kFtToMeters = 0.3048f;
-  static constexpr float kNmToMeters = 1852.0f;
-  static constexpr float kMiToMeters = 1609.34f;
-  static constexpr float kKmToMeters = 1000.0f;
-
   #define SETTING_F(name, def) \
    private: \
     float name##_ = (def); \

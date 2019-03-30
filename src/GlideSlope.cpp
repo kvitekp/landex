@@ -40,8 +40,6 @@ static const float kSlopeHeight = 0.25f;
 static const float kPtDifferenceThreshold = 0.5f;
 
 static const float kTan3 = 0.05240778f;
-static const float kFtToMeters = 0.3048f;
-static const float kNmToMeters = 1852.0f;
 
 static const float kRunwayDistance = 0.5 * kNmToMeters;
 static const float kApproachDistance = 1.5 * kNmToMeters;

@@ -120,6 +120,9 @@ void LandExWindow::OnDrawWindow() {
   GetWindowGeometry(rc);
 
   int glide_slope_bottom = rc.Center().y;
+  if (rc.top - glide_slope_bottom > rc.Width() / 3) {
+    glide_slope_bottom = rc.top - rc.Width() / 3;
+  }
 
   RectF rc_glide_slope(
     static_cast<float>(rc.left),

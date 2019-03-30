@@ -36,16 +36,16 @@ namespace {
 
 bool ApplyDistanceUnits(float* value, const std::string& units) {
   if (units == "nm") {
-    *value *= Settings::kNmToMeters;
+    *value *= kNmToMeters;
   } else
   if (units == "ft") {
-    *value *= Settings::kFtToMeters;
+    *value *= kFtToMeters;
   } else
   if (units == "mi") {
-    *value *= Settings::kMiToMeters;
+    *value *= kMiToMeters;
   } else
   if (units == "km") {
-    *value *= Settings::kKmToMeters;
+    *value *= kKmToMeters;
   } else
     return false;
 
