@@ -67,7 +67,6 @@ bool Settings::Load(const char* filename) {
     absl::string_view input = absl::StripAsciiWhitespace(line);
     if (input.empty() || absl::StartsWith(input, "#"))
       continue;
-
     if (!Load(absl::StrSplit(input, absl::ByAnyChar(" ="), absl::SkipWhitespace()))) {
       LOG(WARNING) << "Invalid setting: '" << line << "', ignored.";
     }
