@@ -22,6 +22,7 @@
 #include "xplmpp/Log.h"
 
 #include "FlightData.h"
+#include "Settings.h"
 
 namespace xplmpp {
 
@@ -40,12 +41,6 @@ static const float kSlopeHeight = 0.25f;
 static const float kPtDifferenceThreshold = 0.5f;
 
 static const float kTan3 = 0.05240778f;
-
-static const float kRunwayDistance = 0.5 * kNmToMeters;
-static const float kApproachDistance = 1.5 * kNmToMeters;
-
-static const float kVGrid = 1 * kNmToMeters;
-static const float kHGrid = 500 * kFtToMeters;
 
 namespace {
 
@@ -77,18 +72,22 @@ GlideSlope::GlideSlope(const RectF& rc)
   // Calculate slope vertical height on the right.
   slope_height_ = rc_view_.Height() * kSlopeHeight;
 
+  // Pick up configuration settings.
+  float runway_distance = g_settings.runway_distance();
+  float approach_distance = g_settings.approach_distance();
+
   // Calculate slope rectangle with bottom left at landing point and
   // top right at the slope center on the right.
   rc_slope_.left = rc_view_.left +
-      kRunwayDistance * rc_view_.Width() / (kRunwayDistance + kApproachDistance);
+      runway_distance * rc_view_.Width() / (runway_distance + approach_distance);
   rc_slope_.bottom = rc_view_.bottom;
   rc_slope_.right = rc_view_.right;
   rc_slope_.top =
       rc_view_.top - rc_view_.Height() * kSlopeTopOffset - slope_height_ / 2;
 
   // Calculate slope right center point in world coordinates
-  slope_right_.x = kApproachDistance;
-  slope_right_.y = DistanceToHeight(kApproachDistance);
+  slope_right_.x = approach_distance;
+  slope_right_.y = DistanceToHeight(approach_distance);
 
   //LOG(INFO) << "GlideSlope::ctor: slope_right=" << slope_right_;
 }
@@ -116,15 +115,15 @@ void GlideSlope::DrawGrid() {
   glColor4fv(kSlopeClrGrid);
   glBegin(GL_LINES);
 
-  // Draw vertical grid lines every 1 nm
-  float v_grid = WorldToWindowX(kVGrid) - WorldToWindowX(0);
+  // Draw vertical grid lines
+  float v_grid = WorldToWindowX(g_settings.vertical_grid()) - WorldToWindowX(0);
   for (float x = rc_slope_.left; x <= rc_view_.right; x += v_grid) {
     glVertex2f(x, rc_view_.bottom);
     glVertex2f(x, rc_view_.top);
   }
 
-  // Draw horizontal grid lines every 100 ft
-  float h_grid = WorldToWindowY(kHGrid) - WorldToWindowY(0);
+  // Draw horizontal grid lines
+  float h_grid = WorldToWindowY(g_settings.horizontal_grid()) - WorldToWindowY(0);
   for (float y = rc_slope_.bottom; y <= rc_view_.top; y += h_grid) {
     glVertex2f(rc_view_.left, y);
     glVertex2f(rc_view_.right, y);

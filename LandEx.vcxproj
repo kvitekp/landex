@@ -46,6 +46,7 @@
     <ClInclude Include="..\xplmpp\XPLMPlugin.h" />
     <ClInclude Include="..\xplmpp\XPLMPluginFactory.h" />
     <ClInclude Include="..\xplmpp\XPLMScreen.h" />
+    <ClInclude Include="..\xplmpp\XPLMPath.h" />
     <ClInclude Include="..\xplmpp\XPLMWindow.h" />
     <ClInclude Include="src\Common.h" />
     <ClInclude Include="src\FlightData.h" />
@@ -69,6 +70,7 @@
     <ClCompile Include="..\xplmpp\XPLMMouse.cpp" />
     <ClCompile Include="..\xplmpp\XPLMPlugin.cpp" />
     <ClCompile Include="..\xplmpp\XPLMScreen.cpp" />
+    <ClCompile Include="..\xplmpp\XPLMPath.cpp" />
     <ClCompile Include="..\xplmpp\XPLMWindow.cpp" />
     <ClCompile Include="src\FlightData.cpp" />
     <ClCompile Include="src\FlightLoop.cpp" />

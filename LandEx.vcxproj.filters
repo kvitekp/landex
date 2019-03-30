@@ -156,6 +156,9 @@
     <ClInclude Include="src\Settings.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="..\xplmpp\XPLMPath.h">
+      <Filter>xplmpp</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\xplmpp\XPLMMonitor.cpp">
@@ -211,6 +214,9 @@
     </ClCompile>
     <ClCompile Include="src\Settings.cpp">
       <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\xplmpp\XPLMPath.cpp">
+      <Filter>xplmpp</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

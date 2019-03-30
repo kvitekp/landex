@@ -21,10 +21,12 @@
 
 #include "absl/strings/ascii.h"
 #include "absl/strings/str_split.h"
+#include "absl/strings/str_join.h"
 #include "absl/strings/strip.h"
 #include "absl/strings/match.h"
 #include "absl/strings/numbers.h"
 
+#include "xplmpp/XPLMPath.h"
 #include "xplmpp/File.h"
 #include "xplmpp/Log.h"
 
@@ -52,13 +54,17 @@ bool ApplyDistanceUnits(float* value, const std::string& units) {
   return true;
 }
 
-}  // namespace {
+}  // namespace
+
+std::string Settings::GetSettingsFilename() {
+  return XPLMPath::GetPrefsFolder() + "LandEx.prf";
+}
 
 bool Settings::Load(const char* filename) {
   File file;
   if (!file.Open(filename, "rt")) {
     LOG(WARNING) << "Could not open settings file '"
-                 << filename << "', error: " << errno;
+                 << filename << "', assuming defaults.";
     return false;
   }
 
@@ -67,6 +73,7 @@ bool Settings::Load(const char* filename) {
     absl::string_view input = absl::StripAsciiWhitespace(line);
     if (input.empty() || absl::StartsWith(input, "#"))
       continue;
+    LOG(VERBOSE) << input;
     if (!Load(absl::StrSplit(input, absl::ByAnyChar(" ="), absl::SkipWhitespace()))) {
       LOG(WARNING) << "Invalid setting: '" << line << "', ignored.";
     }
@@ -79,15 +86,24 @@ bool Settings::Load(const std::vector<std::string>& vstr) {
   if (vstr.size() < 2)
     return false;
 
-  if (vstr[0] == "runway_distance") {
-    SetDistance(vstr, &Settings::set_runway_distance);
-  } else
-  if (vstr[0] == "approach_distance") {
-    SetDistance(vstr, &Settings::set_approach_distance);
-  } else
-    return false;
+  static struct {
+    char* setting;
+    std::function<void(Settings&, float)> setter;
+  } settings[] = {
+    "runway_distance", &Settings::set_runway_distance,
+    "approach_distance", &Settings::set_approach_distance,
+    "vertical_grid", &Settings::set_vertical_grid,
+    "horizontal_grid", &Settings::set_horizontal_grid,
+  };
 
-  return true;
+  for (int n = 0; n < numbof(settings); ++n) {
+    if (vstr[0] == settings[n].setting) {
+      SetDistance(vstr, settings[n].setter);
+      return true;
+    }
+  }
+
+  return false;
 }
 
 bool Settings::SetDistance(const std::vector<std::string>& vstr,

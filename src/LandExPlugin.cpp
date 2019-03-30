@@ -24,6 +24,7 @@
 #include "xplmpp/Log.h"
 
 #include "FlightData.h"
+#include "Settings.h"
 
 namespace xplmpp {
 
@@ -185,6 +186,8 @@ void LandExPlugin::OnPluginError(const char* error) {
 }
 
 bool LandExPlugin::Init() {
+  g_settings.Load();
+
   if (!window_.Create(IsVREnabled())) {
     LOG(FATAL) << "Could not create the window.";
     return false;

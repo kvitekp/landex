@@ -32,9 +32,14 @@ public:
   Settings() = default;
   ~Settings() = default;
 
+  std::string GetSettingsFilename();
+
   bool Load(const char* filename);
   bool Load(const std::string& filename) {
     return Load(filename.c_str());
+  }
+  bool Load() {
+    return Load(GetSettingsFilename());
   }
 
   #define SETTING_F(name, def) \
@@ -46,6 +51,8 @@ public:
 
   SETTING_F(runway_distance, 0.5 * kNmToMeters);
   SETTING_F(approach_distance, 3 * kNmToMeters);
+  SETTING_F(vertical_grid,     1 * kNmToMeters);
+  SETTING_F(horizontal_grid, 500 * kFtToMeters);
 
   #undef SETTING_F
 

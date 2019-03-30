@@ -51,7 +51,7 @@ bool LandExWindow::Create(bool vr_enabled) {
   if (!XPLMWindow::Create(rc))
     return false;
 
-  LOG(VERBOSE) << "Default window rc=" << rc;
+  LOG(INFO) << "Default window rc=" << rc;
 
   SetWindowPositioningMode(vr_enabled ? xplm_WindowVR : xplm_WindowPositionFree);
   SetWindowResizingLimits(kMinWindowSize, kMaxWindowSize);
