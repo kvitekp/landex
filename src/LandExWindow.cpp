@@ -134,7 +134,8 @@ void LandExWindow::OnDrawWindow() {
   glide_slope.Draw();
 
   int char_width, char_height;
-  ::XPLMGetFontDimensions(xplmFont_Proportional, &char_width, &char_height, nullptr);
+  ::XPLMGetFontDimensions(xplmFont_Proportional,
+      &char_width, &char_height, nullptr);
 
   int line_height = char_height + char_height / 4;
   int text_height = line_height * static_cast<int>(lines_.size());
@@ -144,7 +145,9 @@ void LandExWindow::OnDrawWindow() {
   for (const std::string& line : lines_) {
     if (y + line_height < glide_slope_bottom) {
       static float clr_white[] = { 1.0, 1.0, 1.0 };
-      ::XPLMDrawString(clr_white, x, y, const_cast <char*>(line.c_str()), nullptr, xplmFont_Proportional);
+      ::XPLMDrawString(clr_white, x, y,
+          const_cast <char*>(line.c_str()), nullptr,
+          xplmFont_Proportional);
     }
 
     y -= line_height;

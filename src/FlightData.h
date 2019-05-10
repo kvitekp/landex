@@ -29,6 +29,7 @@ namespace xplmpp {
 
 // Represents the plugin flight data
 struct Data {
+  Data() {} // random data
   Data(float time, float ground_speed, float vertical_speed, float agl, bool flying)
   : time(time)
   , ground_speed(ground_speed)
@@ -55,6 +56,8 @@ public:
   }
 
   bool GetLanding(const_iterator& it) const;
+
+  bool GetLast(Data& data) const;
 
   void Reset();
 

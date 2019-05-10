@@ -19,10 +19,18 @@
 
 #include "GlideSlope.h"
 
+#include <sstream>
+#include <vector>
+
+#include "absl/strings/str_split.h"
+
 #include "xplmpp/Log.h"
 
 #include "FlightData.h"
+#include "FlightMath.h"
 #include "Settings.h"
+
+#include "XPLMGraphics.h"
 
 namespace xplmpp {
 
@@ -99,6 +107,7 @@ void GlideSlope::Draw() {
   glLineWidth(1.0);
 
   DrawFrame();
+  DrawInfo();
   DrawGrid();
   DrawSlope();
   DrawFlightPath();
@@ -109,6 +118,36 @@ void GlideSlope::DrawFrame() {
   glBegin(GL_LINE_LOOP);
   glVertex2(rc_);
   glEnd();
+}
+
+void GlideSlope::DrawInfo() {
+  Data data;
+  if (!g_flight_data.GetLast(data))
+    return;
+
+  std::stringstream s;
+  s << "Vg: " << RoundOff(MetersPerSecondToKnots(data.ground_speed)) << " kts\n"
+    << "Vy: " << RoundOff(MetersPerSecondToFeetPerMinute(data.vertical_speed)) << " fpm\n"
+    << "Agl: " << RoundOff(MetersToFeet(data.agl)) << " ft\n";
+
+  std::vector<std::string> vstr = absl::StrSplit(s.str(), "\n");
+
+  int char_width, char_height;
+  ::XPLMGetFontDimensions(xplmFont_Proportional,
+      &char_width, &char_height, nullptr);
+
+  int x = static_cast<int>(rc_view_.left) + char_width / 4;
+  int y = static_cast<int>(rc_view_.top) - char_height - char_height / 4;
+
+  int line_height = char_height + char_height / 4;
+
+  for (const std::string& line : vstr) {
+    static float clr_white[] = { 1.0, 1.0, 1.0 };
+    ::XPLMDrawString(clr_white, x, y,
+        const_cast <char*>(line.c_str()), nullptr,
+        xplmFont_Proportional);
+    y -= line_height;
+  }
 }
 
 void GlideSlope::DrawGrid() {

@@ -67,6 +67,14 @@ bool FlightData::GetLanding(const_iterator& it) const {
   return true;
 }
 
+bool FlightData::GetLast(Data& data) const {
+  if (empty())
+    return false;
+
+  data = back();
+  return true;
+}
+
 void FlightData::Reset() {
   clear();
   shrink_to_fit();

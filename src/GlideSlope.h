@@ -37,6 +37,7 @@ public:
 
 private:
   void DrawFrame();
+  void DrawInfo();
   void DrawGrid();
   void DrawSlope();
   void DrawFlightPath();

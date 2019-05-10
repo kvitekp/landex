@@ -24,6 +24,7 @@
 #include "xplmpp/Log.h"
 
 #include "FlightData.h"
+#include "FlightMath.h"
 #include "Settings.h"
 
 namespace xplmpp {
@@ -38,22 +39,6 @@ namespace xplmpp {
 static const float kReallyFlyingAgl = 10.0f;
 
 namespace {
-
-float RoundOff(float value, float factor = 10.0f) {
-  return rintf(value * factor) / factor;
-}
-
-float MetersPerSecondToFeetPerMinute(float meters_per_second) {
-  return meters_per_second * 196.8504f;
-}
-
-float MetersPerSecondToKnots(float meters_per_second) {
-  return meters_per_second * 1.94384f;
-}
-
-float MetersToFeet(float meters) {
-  return meters * 3.28084f;
-}
 
 std::string LandingQuality(float vy) {
   if (vy < 0.25f) return "EXCELLENT LANDING"; // ~50 fpm

@@ -8,6 +8,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LandEx", "LandEx.vcxproj", 
 		{EC9C2F24-A503-3270-AE38-3A7284415553} = {EC9C2F24-A503-3270-AE38-3A7284415553}
 		{AE1AD12E-F3FC-3672-B889-AF5C9E388087} = {AE1AD12E-F3FC-3672-B889-AF5C9E388087}
 		{45A18239-32B6-3A06-9E91-4A209BBEA768} = {45A18239-32B6-3A06-9E91-4A209BBEA768}
+		{3EA5444B-4F26-3016-AF00-E44F306C13D6} = {3EA5444B-4F26-3016-AF00-E44F306C13D6}
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "absl_strings", "..\..\abseil-cpp\absl\strings\absl_strings.vcxproj", "{EC9C2F24-A503-3270-AE38-3A7284415553}"
@@ -17,6 +18,8 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "absl_internal_throw_delegate", "..\..\abseil-cpp\absl\base\absl_internal_throw_delegate.vcxproj", "{45A18239-32B6-3A06-9E91-4A209BBEA768}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SettingsTest", "SettingsTest\SettingsTest.vcxproj", "{9FB8B917-79F8-4B4E-BB53-F825F8B8E899}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "absl_internal_str_format_internal", "..\..\abseil-cpp\absl\strings\absl_internal_str_format_internal.vcxproj", "{3EA5444B-4F26-3016-AF00-E44F306C13D6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -106,6 +109,22 @@ Global
 		{9FB8B917-79F8-4B4E-BB53-F825F8B8E899}.RelWithDebInfo|x64.Build.0 = Release|x64
 		{9FB8B917-79F8-4B4E-BB53-F825F8B8E899}.RelWithDebInfo|x86.ActiveCfg = Release|Win32
 		{9FB8B917-79F8-4B4E-BB53-F825F8B8E899}.RelWithDebInfo|x86.Build.0 = Release|Win32
+		{3EA5444B-4F26-3016-AF00-E44F306C13D6}.Debug|x64.ActiveCfg = Debug|x64
+		{3EA5444B-4F26-3016-AF00-E44F306C13D6}.Debug|x64.Build.0 = Debug|x64
+		{3EA5444B-4F26-3016-AF00-E44F306C13D6}.Debug|x86.ActiveCfg = Debug|Win32
+		{3EA5444B-4F26-3016-AF00-E44F306C13D6}.Debug|x86.Build.0 = Debug|Win32
+		{3EA5444B-4F26-3016-AF00-E44F306C13D6}.MinSizeRel|x64.ActiveCfg = MinSizeRel|x64
+		{3EA5444B-4F26-3016-AF00-E44F306C13D6}.MinSizeRel|x64.Build.0 = MinSizeRel|x64
+		{3EA5444B-4F26-3016-AF00-E44F306C13D6}.MinSizeRel|x86.ActiveCfg = MinSizeRel|Win32
+		{3EA5444B-4F26-3016-AF00-E44F306C13D6}.MinSizeRel|x86.Build.0 = MinSizeRel|Win32
+		{3EA5444B-4F26-3016-AF00-E44F306C13D6}.Release|x64.ActiveCfg = Release|x64
+		{3EA5444B-4F26-3016-AF00-E44F306C13D6}.Release|x64.Build.0 = Release|x64
+		{3EA5444B-4F26-3016-AF00-E44F306C13D6}.Release|x86.ActiveCfg = Release|Win32
+		{3EA5444B-4F26-3016-AF00-E44F306C13D6}.Release|x86.Build.0 = Release|Win32
+		{3EA5444B-4F26-3016-AF00-E44F306C13D6}.RelWithDebInfo|x64.ActiveCfg = RelWithDebInfo|x64
+		{3EA5444B-4F26-3016-AF00-E44F306C13D6}.RelWithDebInfo|x64.Build.0 = RelWithDebInfo|x64
+		{3EA5444B-4F26-3016-AF00-E44F306C13D6}.RelWithDebInfo|x86.ActiveCfg = RelWithDebInfo|Win32
+		{3EA5444B-4F26-3016-AF00-E44F306C13D6}.RelWithDebInfo|x86.Build.0 = RelWithDebInfo|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

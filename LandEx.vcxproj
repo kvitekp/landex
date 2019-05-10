@@ -51,6 +51,7 @@
     <ClInclude Include="src\Common.h" />
     <ClInclude Include="src\FlightData.h" />
     <ClInclude Include="src\FlightLoopClient.h" />
+    <ClInclude Include="src\FlightMath.h" />
     <ClInclude Include="src\GlideSlope.h" />
     <ClInclude Include="src\LandExCmdHandler.h" />
     <ClInclude Include="src\FlightLoop.h" />
