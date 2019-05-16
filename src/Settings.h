@@ -42,18 +42,27 @@ public:
     return Load(GetSettingsFilename());
   }
 
-  #define SETTING_F(name, def) \
+#define SETTING_I(name, def) \
+   private: \
+    int name##_ = (def); \
+   public: \
+    int name() const { return name##_; } \
+    void set_##name(int name) { name##_ = name; }
+
+#define SETTING_F(name, def) \
    private: \
     float name##_ = (def); \
    public: \
     float name() const { return name##_; } \
     void set_##name(float name) { name##_ = name; }
 
-  SETTING_F(runway_distance, 0.5 * kNmToMeters);
-  SETTING_F(approach_distance, 3 * kNmToMeters);
-  SETTING_F(vertical_grid,     1 * kNmToMeters);
-  SETTING_F(horizontal_grid, 500 * kFtToMeters);
+  SETTING_I(log_level, xplmpp::kDefaultLogLevel);
+  SETTING_F(runway_distance,   0.1f * kNmToMeters);
+  SETTING_F(approach_distance, 1.0f * kNmToMeters);
+  SETTING_F(vertical_grid,     0.1f * kNmToMeters);
+  SETTING_F(horizontal_grid, 100.0f * kFtToMeters);
 
+  #undef SETTING_I
   #undef SETTING_F
 
 private:

@@ -1,4 +1,4 @@
-// Copyright 2019 Peter Kvitek.
+// Copyright (c) 2019 Peter Kvitek.
 //
 // Author: Peter Kvitek (pete@kvitek.com)
 //
@@ -24,9 +24,6 @@
 
 #include "absl/strings/str_split.h"
 
-#include "xplmpp/Log.h"
-
-#include "FlightData.h"
 #include "FlightMath.h"
 #include "Settings.h"
 
@@ -47,6 +44,9 @@ static const float kSlopeTopOffset = 0.05f;
 static const float kSlopeHeight = 0.25f;
 
 static const float kPtDifferenceThreshold = 0.5f;
+
+static const float kLandingHeadingThreshold = 15.0;  // degrees
+static const float kLandingDistanceThreshold = 50.0;  // meters
 
 static const float kTan3 = 0.05240778f;
 
@@ -69,7 +69,31 @@ bool PtDifference(const PointF& pt, const PointF& pt2) {
           fabs(pt2.y - pt.y) > kPtDifferenceThreshold);
 }
 
+// Calculate distance between two points on Earth using Haversine Formula
+double CalcDistance(double lat1, double lon1, double lat2, double lon2) {
+  lat1 = DegreeToRadian(lat1);
+  lat2 = DegreeToRadian(lat2);
+  lon1 = DegreeToRadian(lon1);
+  lon2 = DegreeToRadian(lon2);
+
+  double dlon = lon2 - lon1;
+  double dlat = lat2 - lat1;
+
+  double a = pow(sin(dlat / 2.0), 2.0) + cos(lat1) * cos(lat2) * pow(sin(dlon / 2.0), 2.0);
+  double c = 2.0 * atan2(sqrt(a), sqrt(1.0 - a));
+  static const double kEarthRadius = 6372.8e3; // meters
+  return c * kEarthRadius;
+}
+
 }  // namespace
+
+bool GlideSlope::has_last_landing_ = false;
+double GlideSlope::last_landing_lat_ = 0.0;
+double GlideSlope::last_landing_lon_ = 0.0;
+float GlideSlope::last_landing_heading_ = 0.0;
+
+bool GlideSlope::has_prev_distance_ = false;
+float GlideSlope::prev_distance_ = 0.0;
 
 GlideSlope::GlideSlope(const RectF& rc)
 : rc_(rc) {
@@ -101,6 +125,11 @@ GlideSlope::GlideSlope(const RectF& rc)
 }
 
 GlideSlope::~GlideSlope() {
+}
+
+void GlideSlope::Reset() {
+  has_last_landing_ = false;
+  has_prev_distance_ = false;
 }
 
 void GlideSlope::Draw() {
@@ -161,6 +190,11 @@ void GlideSlope::DrawGrid() {
     glVertex2f(x, rc_view_.top);
   }
 
+  for (float x = rc_slope_.left - v_grid; x >= rc_view_.left; x -= v_grid) {
+    glVertex2f(x, rc_view_.bottom);
+    glVertex2f(x, rc_view_.top);
+  }
+
   // Draw horizontal grid lines
   float h_grid = WorldToWindowY(g_settings.horizontal_grid()) - WorldToWindowY(0);
   for (float y = rc_slope_.bottom; y <= rc_view_.top; y += h_grid) {
@@ -198,10 +232,19 @@ void GlideSlope::DrawSlope() {
 
 void GlideSlope::DrawFlightPath() {
   FlightData::const_iterator it_landing;
-  if (!g_flight_data.GetLanding(it_landing))
+  if (!g_flight_data.GetLanding(it_landing)) {
+    DrawApproachPath();
     return;
+  }
 
-  LOG(INFO) << "GlideSlope::DrawFlightPath: flight_data.size=", g_flight_data.size();
+  has_last_landing_ = true;
+  last_landing_lat_ = it_landing->lat;
+  last_landing_lon_ = it_landing->lon;
+  last_landing_heading_ = it_landing->heading;
+  has_prev_distance_ = false;
+  prev_distance_ = 0.0;
+
+  //LOG(INFO) << "GlideSlope::DrawFlightPath: flight_data.size=" << g_flight_data.size();
 
   // The landing point corresponds to the bottom left point of the standard
   // slope rectangle, so walk the flight data back in time to draw the flight
@@ -209,31 +252,22 @@ void GlideSlope::DrawFlightPath() {
   { glColor4fv(kSlopeClrPath);
     glBegin(GL_LINE_STRIP);
 
-    PointF pos(0);
-    float prev_time = it_landing->time;
-    float prev_ground_speed = it_landing->ground_speed;
-    PointF prev_pt(rc_slope_.BottomLeft());
-    glVertex2(prev_pt);
+    PointF pt(rc_slope_.BottomLeft());
+    glVertex2(pt);
 
-    for (FlightData::const_iterator it = --it_landing; it != g_flight_data.cbegin(); --it) {
-      float ground_speed = (prev_ground_speed + it->ground_speed) / 2;
-      float distance = (prev_time - it->time) * ground_speed;
-      pos.x += distance;
-      pos.y = it->agl;
-
-      PointF pt = WorldToWindow(pos);
-      if (!rc_.PtInRect(pt))
+    for (FlightData::const_iterator it = --it_landing;
+        it != g_flight_data.cbegin(); --it) {
+      if (!IsLandingHeading(it->heading))
         break;
 
-      //LOG(INFO) << "GlideSlope::DrawFlightPath: pos=" << pos << " pt=" << pt;
+      PointF new_pt = WorldToWindow(*it);
+      if (!rc_.PtInRect(new_pt))
+        break;
 
-      if (PtDifference(prev_pt, pt)) {
+      if (PtDifference(new_pt, pt)) {
+        pt = new_pt;
         glVertex2(pt);
-        prev_pt = pt;
       }
-
-      prev_ground_speed = it->ground_speed;
-      prev_time = it->time;
     }
 
     glEnd();
@@ -244,31 +278,76 @@ void GlideSlope::DrawFlightPath() {
   { glColor4fv(kSlopeClrPath2);
     glBegin(GL_LINE_STRIP);
 
-    PointF pos(0);
-    float prev_time = it_landing->time;
-    float prev_ground_speed = it_landing->ground_speed;
-    PointF prev_pt(rc_slope_.BottomLeft());
-    glVertex2(prev_pt);
+    PointF pt(rc_slope_.BottomLeft());
+    glVertex2(pt);
 
-    for (FlightData::const_iterator it = it_landing; it != g_flight_data.cend(); ++it) {
-      float ground_speed = (prev_ground_speed + it->ground_speed) / 2;
-      float distance = (it->time - prev_time) * ground_speed;
-      pos.x -= distance;
-      pos.y = it->agl;
-
-      PointF pt = WorldToWindow(pos);
-      if (!rc_.PtInRect(pt))
+    for (FlightData::const_iterator it = it_landing;
+        it != g_flight_data.cend(); ++it) {
+      if (!IsLandingHeading(it->heading))
         break;
 
-      //LOG(INFO) << "GlideSlope::DrawFlightPath: pos=" << pos << " pt=" << pt;
+      PointF new_pt = WorldToWindow(*it);
+      new_pt.x = rc_slope_.left - (new_pt.x - rc_slope_.left);
+      if (!rc_.PtInRect(new_pt))
+        break;
 
-      if (PtDifference(prev_pt, pt)) {
+      if (PtDifference(new_pt, pt)) {
+        pt = new_pt;
         glVertex2(pt);
-        prev_pt = pt;
       }
+    }
 
-      prev_ground_speed = it->ground_speed;
-      prev_time = it->time;
+    glEnd();
+  }
+}
+
+void GlideSlope::DrawApproachPath() {
+  if (!has_last_landing_)
+    return;
+
+  Data data;
+  if (!g_flight_data.GetLast(data))
+    return;
+
+  if (!IsLandingHeading(data.heading)) {
+    //LOG(INFO) << "GlideSlope::DrawApproachPath: heading_delta=" << heading_delta;
+    return;
+  }
+
+  float distance = CalcLandingDistance(data.lat, data.lon);
+  if (!has_prev_distance_ || distance == prev_distance_) {
+    has_prev_distance_ = true;
+    prev_distance_ = distance;
+    //LOG(INFO) << "GlideSlope::DrawApproachPath: prev_distance_=" << prev_distance_;
+    return;
+  }
+
+  if (distance > prev_distance_) {
+    has_prev_distance_ = false;
+    //LOG(INFO) << "GlideSlope::DrawApproachPath: departure distance=" << distance;
+    return;
+  }
+
+  { glColor4fv(kSlopeClrPath);
+    glBegin(GL_LINE_STRIP);
+
+    { FlightData::const_reverse_iterator it = g_flight_data.crbegin();
+      PointF pt = WorldToWindow(*it);
+      glVertex2(pt);
+
+      for (++it; it != g_flight_data.crend(); ++it) {
+        if (!IsLandingHeading(it->heading))
+          break;
+
+        PointF new_pt = WorldToWindow(*it);
+        if (!rc_.PtInRect(new_pt))
+          break;
+
+        if (PtDifference(new_pt, pt)) {
+          pt = new_pt;
+          glVertex2(pt);
+        }
+      }
     }
 
     glEnd();
@@ -283,8 +362,16 @@ float GlideSlope::WorldToWindowY(float y) {
   return Scale(y, 0.0f, slope_right_.y, rc_slope_.bottom, rc_slope_.top);
 }
 
-PointF GlideSlope::WorldToWindow(const PointF& pt) {
-  return PointF(WorldToWindowX(pt.x), WorldToWindowY(pt.y));
+float GlideSlope::CalcLandingDistance(double lat, double lon) {
+  assert(has_last_landing_);
+  double distance = CalcDistance(lat, lon, last_landing_lat_, last_landing_lon_);
+  return static_cast<float>(distance);
+}
+
+bool GlideSlope::IsLandingHeading(float heading) {
+  assert(has_last_landing_);
+  float heading_delta = fabs(heading - last_landing_heading_);
+  return heading_delta < kLandingHeadingThreshold;
 }
 
 }  // namespace xplmpp

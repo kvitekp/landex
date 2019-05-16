@@ -1,4 +1,4 @@
-// Copyright 2019 Peter Kvitek.
+// Copyright (c) 2019 Peter Kvitek.
 //
 // Author: Peter Kvitek (pete@kvitek.com)
 //
@@ -20,8 +20,6 @@
 #include "LandExPlugin.h"
 
 #include <sstream>
-
-#include "xplmpp/Log.h"
 
 #include "FlightData.h"
 #include "FlightMath.h"
@@ -137,7 +135,6 @@ void LandExPlugin::OnAirplaneFlying(const FlyingInfo& info) {
     if (!really_flying_ && info.agl >= kReallyFlyingAgl) {
       window_.AddLine("...");
       really_flying_ = true;
-      g_flight_data.Reset();
     }
     return;
   }
@@ -172,6 +169,8 @@ void LandExPlugin::OnPluginError(const char* error) {
 
 bool LandExPlugin::Init() {
   g_settings.Load();
+
+  g_log.set_log_level(static_cast<LogLevel>(g_settings.log_level()));
 
   if (!window_.Create(IsVREnabled())) {
     LOG(FATAL) << "Could not create the window.";

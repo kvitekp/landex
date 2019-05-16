@@ -21,6 +21,7 @@
 #define LANDEX_COMMON_H
 
 #include "xplmpp/Common.h"
+#include "xplmpp/Log.h"
 
 namespace xplmpp {
 

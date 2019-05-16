@@ -1,4 +1,4 @@
-// Copyright 2019 Peter Kvitek.
+// Copyright (c) 2019 Peter Kvitek.
 //
 // Author: Peter Kvitek (pete@kvitek.com)
 //
@@ -20,7 +20,6 @@
 #include "LandExWindow.h"
 
 #include "xplmpp/XPLMScreen.h"
-#include "xplmpp/Log.h"
 #include "xplmpp/Rect.h"
 
 #include "XPLMGraphics.h"

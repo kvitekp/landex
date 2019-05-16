@@ -1,4 +1,4 @@
-// Copyright 2019 Peter Kvitek.
+// Copyright (c) 2019 Peter Kvitek.
 //
 // Author: Peter Kvitek (pete@kvitek.com)
 //
@@ -20,6 +20,9 @@
 #ifndef LANDEX_FLIGHTMATH_H
 #define LANDEX_FLIGHTMATH_H
 
+#define _USE_MATH_DEFINES
+#include <math.h>
+
 inline float RoundOff(float value, float factor = 10.0f) {
   return rintf(value * factor) / factor;
 }
@@ -34,6 +37,10 @@ inline float MetersPerSecondToKnots(float meters_per_second) {
 
 inline float MetersToFeet(float meters) {
   return meters * 3.28084f;
+}
+
+inline double DegreeToRadian(double angle) {
+  return M_PI * angle / 180.0;
 }
 
 #endif // #ifndef LANDEX_FLIGHTMATH_H

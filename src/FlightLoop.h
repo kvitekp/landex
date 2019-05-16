@@ -22,7 +22,7 @@
 
 #include "Common.h"
 
-#define WRITE_TRACE_FILE 1
+#define WRITE_TRACE_FILE 0
 
 #if WRITE_TRACE_FILE
 #include <iostream>
@@ -78,12 +78,19 @@ private:
     XPLMData member; \
     float getter() { return member.GetDataf(); }
 
+  #define DATAREF_D(getter, member) \
+    XPLMData member; \
+    double getter() { return member.GetDatad(); }
+
   DATAREF_I(ReplayMode, replay_mode_)  // Are we in replay mode?
   DATAREF_F(FaxilGear, faxil_gear_)  // Gear/ground forces - backward - ACF Z, newtons
   DATAREF_F(GroundSpeed, ground_speed_)  // Ground speed, meters/sec
   DATAREF_F(VerticalSpeed, vertical_speed_)  // Vertical speed, meters/sec
   DATAREF_F(GForce, gforce_)  // G force, meters/sec^2
   DATAREF_F(Agl, agl_)  // Altitude above ground level, meters
+  DATAREF_D(Latitude, latitude_)  // The latitude of the aircraft
+  DATAREF_D(Longitude, longitude_)  // The longitude of the aircraft
+  DATAREF_F(Heading, heading_)  // The heading of the aircraft
 
 #undef DATAREF_I
 #undef DATAREF_F

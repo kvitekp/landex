@@ -1,4 +1,4 @@
-// Copyright 2019 Peter Kvitek.
+// Copyright (c) 2019 Peter Kvitek.
 //
 // Author: Peter Kvitek (pete@kvitek.com)
 //
@@ -21,8 +21,6 @@
 
 #include "XPLMProcessing.h"
 
-#include "xplmpp/Log.h"
-
 #include "FlightData.h"
 
 namespace xplmpp {
@@ -30,6 +28,7 @@ namespace xplmpp {
 static const float kFlightLoopIntervalSeconds = 0.05f;
 static const float kInitialSettleDownTimeout = 3.0f;
 static const float kFlyingCallbackPeriod = 1.0f;
+static const float kLandingHeadingThreshold = 15.0;  // degrees
 
 std::unique_ptr<FlightLoop> FlightLoop::Create(FlightLoopClient* client) {
   return std::make_unique<FlightLoop>(client);
@@ -65,6 +64,9 @@ void FlightLoop::FindDataSources() {
   vertical_speed_.Find("sim/flightmodel/position/vh_ind");
   gforce_.Find("sim/flightmodel2/misc/gforce_normal");
   agl_.Find("sim/flightmodel/position/y_agl");
+  latitude_.Find("sim/flightmodel/position/latitude");
+  longitude_.Find("sim/flightmodel/position/longitude");
+  heading_.Find("sim/flightmodel/position/true_psi");
 }
 
 bool FlightLoop::IsFlying() {
@@ -117,10 +119,19 @@ float FlightLoop::OnFlightLoopCallback(float elapsed_since_last_call,
       }
     }
 
+    // Check if turned crosswind or otherwise deviated from landing heading and
+    // reset collected flight data if so.
+    Data landing_data;
+    if (IsFlying() && g_flight_data.GetLanding(landing_data)) {
+      float heading_delta = fabs(Heading() - landing_data.heading);
+      if (heading_delta > kLandingHeadingThreshold)
+        g_flight_data.Reset();
+    }
+
     // Append flight data
     g_flight_data.Add(
       Data(elapsed_time_since_last_flightLoop, GroundSpeed(), VerticalSpeed(),
-           Agl(), IsFlying()));
+           Agl(), Latitude(), Longitude(), Heading(), IsFlying()));
   }
 
 #if WRITE_TRACE_FILE
@@ -129,6 +140,8 @@ float FlightLoop::OnFlightLoopCallback(float elapsed_since_last_call,
         << " vs=" << VerticalSpeed()
         << " gf=" << GForce()
         << " agl=" << Agl()
+        << " pos=(" << Latitude() << ", " << Longitude() << ")"
+        << " hdi=" << Heading()
 #if 0
         << " elapsed_since_last_call=" << elapsed_since_last_call
         << " elapsed_time_since_last_flightLoop=" << elapsed_time_since_last_flightLoop

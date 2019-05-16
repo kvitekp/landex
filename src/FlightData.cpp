@@ -1,4 +1,4 @@
-// Copyright 2019 Peter Kvitek.
+// Copyright (c) 2019 Peter Kvitek.
 //
 // Author: Peter Kvitek (pete@kvitek.com)
 //
@@ -26,6 +26,7 @@ FlightData g_flight_data;
 namespace {
 
 static const float kDataDifferenceThreshold = 0.000001f;
+static const float kAglChangeResetThreshold = 5.0f;
 
 bool DataDifference(const Data& data, const Data& data2) {
   return fabs(data2.ground_speed - data.ground_speed) > kDataDifferenceThreshold ||
@@ -53,6 +54,11 @@ void FlightData::Add(const Data& data) {
     return;
   }
 
+  // Check for abrupt AGL changes and reset dataset since
+  // chances are that flight situation was reloaded.
+  if (!empty() && fabs(data.agl - back().agl) > kAglChangeResetThreshold)
+    Reset();
+
   // TODO(kvitekp): bound size by keeping track of the distance
   // travelled and limiting it to 3nm
   emplace_back(data);
@@ -64,6 +70,14 @@ bool FlightData::GetLanding(const_iterator& it) const {
 
   it = cbegin();
   advance(it, landing_index_);
+  return true;
+}
+
+bool FlightData::GetLanding(Data& data) const {
+  const_iterator it;
+  if (!GetLanding(it))
+    return false;
+  data = *it;
   return true;
 }
 
