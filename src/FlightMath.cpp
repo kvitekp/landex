@@ -15,39 +15,27 @@
 //
 // -----------------------------------------------------------------------------
 //
-// Flight math functions.
+// Plugin flight data implementation.
 
-#ifndef LANDEX_FLIGHTMATH_H
-#define LANDEX_FLIGHTMATH_H
-
-#define _USE_MATH_DEFINES
-#include <math.h>
+#include "FlightMath.h"
 
 namespace xplmpp {
 
-inline float RoundOff(float value, float factor = 10.0f) {
-  return rintf(value * factor) / factor;
-}
+// Calculate distance between two points on Earth using Haversine Formula
+double CalcEarthDistance(double lat1, double lon1, double lat2, double lon2) {
+  lat1 = DegreeToRadian(lat1);
+  lat2 = DegreeToRadian(lat2);
+  lon1 = DegreeToRadian(lon1);
+  lon2 = DegreeToRadian(lon2);
 
-inline float MetersPerSecondToFeetPerMinute(float meters_per_second) {
-  return meters_per_second * 196.8504f;
-}
+  double dlon = lon2 - lon1;
+  double dlat = lat2 - lat1;
 
-inline float MetersPerSecondToKnots(float meters_per_second) {
-  return meters_per_second * 1.94384f;
+  double a = pow(sin(dlat / 2.0), 2.0) +
+    cos(lat1) * cos(lat2) * pow(sin(dlon / 2.0), 2.0);
+  double c = 2.0 * atan2(sqrt(a), sqrt(1.0 - a));
+  static const double kEarthRadius = 6372.8e3; // meters
+  return c * kEarthRadius;
 }
-
-inline float MetersToFeet(float meters) {
-  return meters * 3.28084f;
-}
-
-inline double DegreeToRadian(double angle) {
-  return M_PI * angle / 180.0;
-}
-
-// Calculates distance between two points on Earth using Haversine Formula
-double CalcEarthDistance(double lat1, double lon1, double lat2, double lon2);
 
 }  // namespace xplmpp
-
-#endif // #ifndef LANDEX_FLIGHTMATH_H

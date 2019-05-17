@@ -75,6 +75,7 @@
     <ClCompile Include="..\xplmpp\XPLMWindow.cpp" />
     <ClCompile Include="src\FlightData.cpp" />
     <ClCompile Include="src\FlightLoop.cpp" />
+    <ClCompile Include="src\FlightMath.cpp" />
     <ClCompile Include="src\GlideSlope.cpp" />
     <ClCompile Include="src\LandExMenu.cpp" />
     <ClCompile Include="src\LandExPlugin.cpp" />

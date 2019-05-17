@@ -221,5 +221,8 @@
     <ClCompile Include="..\xplmpp\XPLMPath.cpp">
       <Filter>xplmpp</Filter>
     </ClCompile>
+    <ClCompile Include="src\FlightMath.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

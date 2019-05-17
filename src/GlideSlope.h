@@ -35,7 +35,6 @@ public:
   ~GlideSlope();
 
   void Draw();
-  void Reset();
 
 private:
   void DrawFrame();
@@ -45,23 +44,12 @@ private:
   void DrawFlightPath();
   void DrawApproachPath();
 
-  float WorldToWindowX(float x);
-  float WorldToWindowY(float y);
+  float WorldToWindowX(float x) const;
+  float WorldToWindowY(float y) const;
 
-  PointF WorldToWindow(const PointF& pt) {
-    return PointF(WorldToWindowX(pt.x), WorldToWindowY(pt.y));
-  }
-
-  PointF WorldToWindow(double lat, double lon, float agl) {
-    return WorldToWindow(PointF(CalcLandingDistance(lat, lon), agl));
-  }
-
-  PointF WorldToWindow(const Data& data) {
-    return WorldToWindow(data.lat, data.lon, data.agl);
-  }
-
-  float CalcLandingDistance(double lat, double lon);
-  bool IsLandingHeading(float heading);
+  PointF WorldToWindow(const PointF& pt) const;
+  PointF WorldToWindow(double lat, double lon, float agl) const;
+  PointF WorldToWindow(const Data& data) const;
 
   RectF rc_;       // Caller's rectangle (frame)
   RectF rc_view_;  // View rectangle (caller's rectangle sans view margins)
@@ -69,11 +57,6 @@ private:
 
   float slope_height_; // Slope triangle height on the right (window)
   PointF slope_right_; // Slope center right in world coordinates
-
-  static bool has_last_landing_;
-  static double last_landing_lat_;
-  static double last_landing_lon_;
-  static float last_landing_heading_;
 
   static bool has_prev_distance_;
   static float prev_distance_;

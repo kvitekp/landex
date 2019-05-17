@@ -18,6 +18,7 @@
 // Plugin flight data implementation.
 
 #include "FlightData.h"
+#include "FlightMath.h"
 
 namespace xplmpp {
 
@@ -28,10 +29,16 @@ namespace {
 static const float kDataDifferenceThreshold = 0.000001f;
 static const float kAglChangeResetThreshold = 5.0f;
 
+static const float kLandingHeadingThreshold = 15.0;  // degrees
+static const float kLandingDistanceThreshold = 50.0;  // meters
+
 bool DataDifference(const Data& data, const Data& data2) {
   return fabs(data2.ground_speed - data.ground_speed) > kDataDifferenceThreshold ||
          fabs(data2.vertical_speed - data.vertical_speed) > kDataDifferenceThreshold ||
          fabs(data2.agl - data.agl) > kDataDifferenceThreshold ||
+         fabs(data2.lat - data.lat) > kDataDifferenceThreshold ||
+         fabs(data2.lon - data.lon) > kDataDifferenceThreshold ||
+         fabs(data2.heading - data.heading) > kDataDifferenceThreshold ||
          data2.flying != data.flying;
 }
 
@@ -48,7 +55,7 @@ void FlightData::Add(const Data& data) {
     }
   }
 
-  // Advance time on the last entry if not enough differene
+  // Advance time on the last entry if not enough difference
   if (!empty() && !DataDifference(data, back())) {
     back().time = data.time;
     return;
@@ -59,6 +66,12 @@ void FlightData::Add(const Data& data) {
   if (!empty() && fabs(data.agl - back().agl) > kAglChangeResetThreshold)
     Reset();
 
+  // Check if landed and update last landing info
+  if (!empty() && back().flying && !data.flying) {
+    last_landing_ = data;
+    has_last_landing_ = true;
+  }
+  
   // TODO(kvitekp): bound size by keeping track of the distance
   // travelled and limiting it to 3nm
   emplace_back(data);
@@ -87,6 +100,35 @@ bool FlightData::GetLast(Data& data) const {
 
   data = back();
   return true;
+}
+
+bool FlightData::GetLastLanding(Data& data) const {
+  if (!has_last_landing_)
+    return false;
+
+  data = last_landing_;
+  return true;
+}
+
+bool FlightData::IsLastLandingHeading() const {
+  if (empty() || !has_last_landing_)
+    return false;
+
+  return IsLastLandingHeading(back().heading);
+}
+
+bool FlightData::IsLastLandingHeading(float heading) const {
+  if (!has_last_landing_)
+    return false;
+
+  float heading_delta = fabs(heading - last_landing_.heading);
+  return heading_delta < kLandingHeadingThreshold;
+}
+
+float FlightData::GetLastLandingDistance(double lat, double lon) const {
+  assert(has_last_landing_);
+  double distance = CalcEarthDistance(lat, lon, last_landing_.lat, last_landing_.lon);
+  return static_cast<float>(distance);
 }
 
 void FlightData::Reset() {

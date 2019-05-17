@@ -66,12 +66,22 @@ public:
   bool GetLanding(Data& data) const;
 
   bool GetLast(Data& data) const;
+  bool GetLastLanding(Data& data) const;
 
+  bool has_last_landing() const { return has_last_landing_;  }
+
+  bool IsLastLandingHeading() const;
+  bool IsLastLandingHeading(float heading) const;
+
+  float GetLastLandingDistance(double lat, double lon) const;
+  
   void Reset();
 
 private:
   size_t landing_index_ = 0;
 
+  bool has_last_landing_ = false;
+  Data last_landing_;
 };
 
 extern FlightData g_flight_data;
