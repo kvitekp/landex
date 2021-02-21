@@ -143,7 +143,8 @@ void LandExPlugin::OnAirplaneFlying(const FlyingInfo& info) {
   s << "Flying:   "
     << "  Vy=" << RoundOff(MetersPerSecondToFeetPerMinute(info.vertical_speed)) << " fpm"
     << "  Vg=" << RoundOff(MetersPerSecondToKnots(info.ground_speed)) << " kts"
-    << "  Agl=" << RoundOff(MetersToFeet(info.agl)) << " ft";
+    << "  AGL=" << RoundOff(MetersToFeet(info.agl)) << " ft"
+    << "  MSL=" << RoundOff(info.msl) << " ft";
   window_.AddLine(s.str());
 }
 

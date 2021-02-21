@@ -24,14 +24,17 @@ namespace xplmpp {
 
 // Flying info data.
 struct FlyingInfo {
-  FlyingInfo(float ground_speed = 0, float vertical_speed = 0, float agl = 0)
+  FlyingInfo(float ground_speed = 0, float vertical_speed = 0, float agl = 0, float msl = 0)
   : ground_speed(ground_speed)
   , vertical_speed(vertical_speed)
-  , agl(agl) {}
+  , agl(agl)
+  , msl(msl)
+  {}
 
   float ground_speed;
   float vertical_speed;
   float agl;
+  float msl;
 };
 
 // Landing info data.

@@ -30,12 +30,13 @@ namespace xplmpp {
 // Represents the plugin flight data
 struct Data {
   Data() {} // random data
-  Data(float time, float ground_speed, float vertical_speed, float agl,
+  Data(float time, float ground_speed, float vertical_speed, float agl, float msl,
     double lat, double lon, float heading, bool flying)
   : time(time)
   , ground_speed(ground_speed)
   , vertical_speed(vertical_speed)
   , agl(agl)
+  , msl(msl)
   , lat(lat)
   , lon(lon)
   , heading(heading)
@@ -45,6 +46,7 @@ struct Data {
   float ground_speed;
   float vertical_speed;
   float agl;
+  float msl;
   double lat;
   double lon;
   float heading;
@@ -74,7 +76,7 @@ public:
   bool IsLastLandingHeading(float heading) const;
 
   float GetLastLandingDistance(double lat, double lon) const;
-  
+
   void Reset();
 
 private:

@@ -88,6 +88,7 @@ private:
   DATAREF_F(VerticalSpeed, vertical_speed_)  // Vertical speed, meters/sec
   DATAREF_F(GForce, gforce_)  // G force, meters/sec^2
   DATAREF_F(Agl, agl_)  // Altitude above ground level, meters
+  DATAREF_F(Msl, msl_)  // Indicated altitude above mean sea level, feet
   DATAREF_D(Latitude, latitude_)  // The latitude of the aircraft
   DATAREF_D(Longitude, longitude_)  // The longitude of the aircraft
   DATAREF_F(Heading, heading_)  // The heading of the aircraft

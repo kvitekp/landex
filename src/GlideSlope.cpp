@@ -128,7 +128,8 @@ void GlideSlope::DrawInfo() {
   std::stringstream s;
   s << "Vg: " << RoundOff(MetersPerSecondToKnots(data.ground_speed)) << " kts\n"
     << "Vy: " << RoundOff(MetersPerSecondToFeetPerMinute(data.vertical_speed)) << " fpm\n"
-    << "Agl: " << RoundOff(MetersToFeet(data.agl)) << " ft\n";
+    << "AGL: " << RoundOff(MetersToFeet(data.agl)) << " ft\n"
+    << "MSL: " << RoundOff(data.msl) << " ft\n";
 
   std::vector<std::string> vstr = absl::StrSplit(s.str(), "\n");
 

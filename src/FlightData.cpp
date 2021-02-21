@@ -36,6 +36,7 @@ bool DataDifference(const Data& data, const Data& data2) {
   return fabs(data2.ground_speed - data.ground_speed) > kDataDifferenceThreshold ||
          fabs(data2.vertical_speed - data.vertical_speed) > kDataDifferenceThreshold ||
          fabs(data2.agl - data.agl) > kDataDifferenceThreshold ||
+         fabs(data2.msl - data.msl) > kDataDifferenceThreshold ||
          fabs(data2.lat - data.lat) > kDataDifferenceThreshold ||
          fabs(data2.lon - data.lon) > kDataDifferenceThreshold ||
          fabs(data2.heading - data.heading) > kDataDifferenceThreshold ||
@@ -71,7 +72,7 @@ void FlightData::Add(const Data& data) {
     last_landing_ = data;
     has_last_landing_ = true;
   }
-  
+
   // TODO(kvitekp): bound size by keeping track of the distance
   // travelled and limiting it to 3nm
   emplace_back(data);

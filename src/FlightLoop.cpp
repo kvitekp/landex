@@ -64,6 +64,7 @@ void FlightLoop::FindDataSources() {
   vertical_speed_.Find("sim/flightmodel/position/vh_ind");
   gforce_.Find("sim/flightmodel2/misc/gforce_normal");
   agl_.Find("sim/flightmodel/position/y_agl");
+  msl_.Find("sim/cockpit2/gauges/indicators/altitude_ft_pilot");
   latitude_.Find("sim/flightmodel/position/latitude");
   longitude_.Find("sim/flightmodel/position/longitude");
   heading_.Find("sim/flightmodel/position/true_psi");
@@ -89,7 +90,7 @@ bool FlightLoop::UpdateState() {
   case State::landed:
     if (IsFlying()) {
       state_ = State::flying;
-      FlyingInfo info(GroundSpeed(), VerticalSpeed(), Agl());
+      FlyingInfo info(GroundSpeed(), VerticalSpeed(), Agl(), Msl());
       client_->OnAirplaneFlying(info);
       time_since_last_flying_report_ = 0.0;
       return true;
@@ -113,7 +114,7 @@ float FlightLoop::OnFlightLoopCallback(float elapsed_since_last_call,
     if (!UpdateState() && state_ == State::flying) {
       time_since_last_flying_report_ += elapsed_since_last_call;
       if (time_since_last_flying_report_ >= kFlyingCallbackPeriod) {
-        FlyingInfo info(GroundSpeed(), VerticalSpeed(), Agl());
+        FlyingInfo info(GroundSpeed(), VerticalSpeed(), Agl(), Msl());
         client_->OnAirplaneFlying(info);
         time_since_last_flying_report_ = 0.0;
       }
@@ -131,7 +132,7 @@ float FlightLoop::OnFlightLoopCallback(float elapsed_since_last_call,
     // Append flight data
     g_flight_data.Add(
       Data(elapsed_time_since_last_flightLoop, GroundSpeed(), VerticalSpeed(),
-           Agl(), Latitude(), Longitude(), Heading(), IsFlying()));
+           Agl(), Msl(), Latitude(), Longitude(), Heading(), IsFlying()));
   }
 
 #if WRITE_TRACE_FILE
@@ -139,7 +140,8 @@ float FlightLoop::OnFlightLoopCallback(float elapsed_since_last_call,
         << " gs=" << GroundSpeed()
         << " vs=" << VerticalSpeed()
         << " gf=" << GForce()
-        << " agl=" << Agl()
+        << " AGL=" << Agl()
+        << " MSL=" << Msl()
         << " pos=(" << Latitude() << ", " << Longitude() << ")"
         << " hdi=" << Heading()
 #if 0
